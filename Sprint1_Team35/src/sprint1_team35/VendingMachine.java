@@ -427,6 +427,7 @@ public class VendingMachine {
 	public double addCredit(double coin) {
 		if (coin == 0.10 || coin == 0.20 || coin == 0.50 || coin == 1.0 || coin == 2.0) {
 			this.credit += coin;
+			this.cashbox.EnterCoin(coin);
 			return this.credit;
 		}
 		else {
