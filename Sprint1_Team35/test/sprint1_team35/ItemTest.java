@@ -67,7 +67,7 @@ class ItemTest {
 		item.setName("Name");
 		item.setCost(1.50);
 		item.setQuantity(20);
-		String expected = "Name: Name\nPrice: £1.50\nAmount in stock: 20";
+		String expected = "Name: Name\nPrice: Â£1.50\nAmount in stock: 20";
 		String actual = item.toString();
 		assertEquals(expected, actual);
 	}

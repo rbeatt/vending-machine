@@ -114,17 +114,18 @@ class VendingMachineTest {
 
 	@Test
 	void testAddCredit() {
+		double expected = machine.getCredit() + 2.00;
 		double1 = 2.00;
 		machine.addCredit(double1);
-		double expected = machine.getCredit() + double1;
 		double actual = machine.getCredit();
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	void testPurchaseProduct() {
+		machine.addCredit(2.00);
 		int expected = 1;
-		int actual = machine.purchaseProduct(1, 1);
+		int actual = machine.purchaseProduct(2, 1);
 		assertEquals(expected, actual);
 	}
 	

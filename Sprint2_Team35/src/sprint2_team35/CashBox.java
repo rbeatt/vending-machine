@@ -1,4 +1,4 @@
-package sprint1_team35;
+package sprint2_team35;
 
 import java.text.DecimalFormat;
 
@@ -67,7 +67,7 @@ public class CashBox {
 						}
 			
 			
-			//When a �1 is entered, the total �1 coins goes up by 1
+			//When a £1 is entered, the total �1 coins goes up by 1
 			if (CoinEntered == 1 && TotalPounds < 50) {
 				
 				TotalPounds += 1;
@@ -80,7 +80,7 @@ public class CashBox {
 				
 				
 			}
-			//When a �2 is entered, the total �2 coins goes up by 1
+			//When a £2 is entered, the total �2 coins goes up by 1
 			if (CoinEntered == 2 && Total2Pounds < 50) {
 				
 				Total2Pounds += 1;

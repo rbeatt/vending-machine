@@ -1,4 +1,4 @@
-package sprint1_team35;
+package sprint2_team35;
 
 import java.io.File;
 import java.io.PrintWriter;

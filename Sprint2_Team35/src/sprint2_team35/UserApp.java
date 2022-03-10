@@ -1,4 +1,4 @@
-package sprint1_team35;
+package sprint2_team35;
 
 import java.text.DecimalFormat;
 import java.util.Scanner;
