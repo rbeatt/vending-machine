@@ -394,10 +394,10 @@ public class VendingMachine {
 		}
 		String changeStr = "Change given: ";
 		if (change[4] > 0) {
-			changeStr += change[4] + " Â£2 coin(s), ";
+			changeStr += change[4] + " £2 coin(s), ";
 		}
 		if (change[3] > 0) {
-			changeStr += change[3] + " Â£1 coin(s), ";
+			changeStr += change[3] + " £1 coin(s), ";
 		}
 		if (change[2] > 0) {
 			changeStr += change[2] + " 50p coin(s), ";

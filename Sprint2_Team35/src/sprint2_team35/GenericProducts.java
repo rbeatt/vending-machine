@@ -1,39 +1,33 @@
 package sprint2_team35;
 
 public class GenericProducts implements IProducts{
-	private String id;					//Product Id for the vending machine e.g. A1 or C4
 	private String productName;			//Product name
 	private ProductType productType;	//Product type e.g. food, drink
 	private double price;				//Product's price
-	private int count;					//Product's amount
+	private int quantity;					//Product's amount
 	
 	/**
 	 *  A empty constructor
 	 */
 	public GenericProducts() {
+		setProductName("");
+		setPrice(0);
+		setQuantity(0);
 	}
 
 	/**
 	 * 
-	 * @param id
 	 * @param itemName
 	 * @param price
-	 * @param count
+	 * @param quantity
 	 */
-	public GenericProducts(String id, String productName, double price, int count) {
-		this.id = id;
+	public GenericProducts(String productName, ProductType productType ,double price, int quantity) {
 		this.productName = productName;
+		this.productType = productType;
 		this.price = price;
-		this.count = count;
+		this.quantity = quantity;
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
-	public String getId() {
-		return this.id;
-	}
 	
 	/**
 	 * 
@@ -82,8 +76,22 @@ public class GenericProducts implements IProducts{
 	 * 
 	 * @return
 	 */
-	public int getCount() {
-		return this.count;
+	public int getQuantity() {
+		return this.quantity;
+	}
+	
+	/**
+	 * 
+	 * @param productName
+	 */
+	public void setProductName(String productName) {
+		if(productName != null) {
+			this.productName = productName;
+		}
+		else if(productName == null || productName == "") {
+			//default value
+			this.productName = "Undefined";
+		}
 	}
 	
 	/**
@@ -101,9 +109,9 @@ public class GenericProducts implements IProducts{
 	 * This method will add product stocks to the current stock
 	 * @param count
 	 */
-	public void setCount(int count) {
-		if(count > 0) {
-			this.count += count;
+	public void setQuantity(int quantity) {
+		if(quantity > 0) {
+			this.quantity += quantity;
 		}
 	}
 	
@@ -113,15 +121,29 @@ public class GenericProducts implements IProducts{
 	public String purchase() {
 		String buy = "";
 		buy += "You have bought: " + this.productName + " for " + this.price;
-		this.count--;
+		this.quantity--;
+		lowOnProducts();
 		return buy;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String lowOnProducts() {
+		String stock = "";
+		if(this.quantity >= 3) {
+			stock += "Product: " + this.productName + " is low on stock";
+			return stock;
+		}
+		return "";
 	}
 	
 	/**
 	 * 
 	 */
 	public String toString() {
-        String details = this.id + "," + this.productName + "," +  this.price + "," + this.count;
+        String details = this.productName + "," +  this.price + "," + this.quantity;
         return details;
     }
 }
