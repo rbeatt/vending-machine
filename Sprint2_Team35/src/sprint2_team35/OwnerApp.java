@@ -250,6 +250,7 @@ public class OwnerApp {
 	private static void softwareUpdate() {
 		Scanner sc = new Scanner(System.in);
 		if (machine.detectUSB()) {
+			
 			machine.listUSBContents();
 			System.out.println("Please enter the file you'd like to perform an update from: ");
 			machine.readUSBContents(sc.nextLine());
