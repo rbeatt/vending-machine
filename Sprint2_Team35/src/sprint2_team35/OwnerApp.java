@@ -31,7 +31,11 @@ public class OwnerApp {
 				break;
 			case 5: resetCashbox();
 				break;
-			case 6: finished = true;
+			case 6:
+				break;
+			case 7:
+				break;
+			case 8: finished = true;
 				break;
 			default:
 				System.out.println("\nNot a valid option."); // Displays when an invalid option is entered
@@ -241,6 +245,18 @@ public class OwnerApp {
 			}
 		} while (!finished);
 		
+	}
+	
+	private static void softwareUpdate() {
+		Scanner sc = new Scanner(System.in);
+		if (machine.detectUSB()) {
+			machine.listUSBContents();
+			System.out.println("Please enter the file you'd like to perform an update from: ");
+			machine.readUSBContents(sc.nextLine());
+		}
+		else {
+			System.out.println("A USB device has not been inserted");
+		}
 	}
 	
 	/**

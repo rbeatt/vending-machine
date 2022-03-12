@@ -18,7 +18,7 @@ public class UserApp {
 	 * setCredit() in the VendingMachine class.
 	 */
 
-	public static void addCredit() {
+	private static void addCredit() {
 		Scanner input = new Scanner(System.in);
 		boolean finished = false;
 
@@ -54,7 +54,7 @@ public class UserApp {
 	 * This method requests input from a user and calls toString() of the selected product.
 	 */
 
-	public static void displayInfo() {
+	private static void displayInfo() {
 		Scanner input = new Scanner(System.in);
 
 		System.out.println("Please make a selection: ");
@@ -113,7 +113,7 @@ public class UserApp {
 	 * @param column - the column number of selected product
 	 */
 
-	public static void purchaseProduct(int row, int column) {
+	private static void purchaseProduct(int row, int column) {
 		Scanner input = new Scanner(System.in);
 		double moneyPaid = machine.getCredit(); // Assigns the credit to a variable to be used to calculate change
 		double actualCost = 0.0; // Cost of products purchased
@@ -171,7 +171,7 @@ public class UserApp {
 	 * @param actualCost - cost of the product
 	 */
 
-	public static void completePurchase(double moneyPaid, double actualCost) {
+	private static void completePurchase(double moneyPaid, double actualCost) {
 		Scanner input = new Scanner(System.in);
 		try {
 			String[] options = { "Yes", "No" };

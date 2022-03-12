@@ -15,6 +15,7 @@ public class VendingMachine {
 	private Item[][] item = new Item[5][5];
 	private CashBox cashbox = new CashBox();
 	private double credit = 0;
+	private USBDevice port1 = new USBDevice();
 
 	/**
 	 * Constructor method for VendingMachine object. Loads the relevant item and coin holder data from a text file.
@@ -459,5 +460,25 @@ public class VendingMachine {
 			return 0; // Product out of stock
 		}
 	}
+	
+	public boolean detectUSB() {
+		if (port1.detectUSB()) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public String listUSBContents() {
+		return port1.listContents(port1.getDeviceName());
+	}
+	
+	public String readUSBContents(String fileName) {
+		return port1.readContents(port1.getDeviceName(), fileName);
+		
+	}
+	
+	
 	
 }

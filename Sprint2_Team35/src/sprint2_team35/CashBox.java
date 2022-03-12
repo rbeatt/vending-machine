@@ -2,7 +2,7 @@ package sprint2_team35;
 
 import java.text.DecimalFormat;
 
-public class CashBox {
+public class CashBox implements ICashBox {
 
 	public int Total10s;
 	public int Total20s;
