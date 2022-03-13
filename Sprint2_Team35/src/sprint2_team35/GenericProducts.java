@@ -99,7 +99,7 @@ public class GenericProducts implements IProducts{
 	 * @param price
 	 */
 	public void setPrice(double price) {
-		double check = (price % 0.1);			//If modulus 10p is 0 then it will accept the value
+		double check = (price % 0.1);			//If modulus 10p is 0 then it will accept the value so change can be given out
 		if(check == 0) {
 			this.price = price;
 		}
@@ -120,7 +120,7 @@ public class GenericProducts implements IProducts{
 	 */
 	public String purchase() {
 		String buy = "";
-		buy += "You have bought: " + this.productName + " for " + this.price;
+		buy += "You have bought: " + this.productName + " for £" + this.price;
 		this.quantity--;
 		lowOnProducts();
 		return buy;
@@ -134,6 +134,10 @@ public class GenericProducts implements IProducts{
 		String stock = "";
 		if(this.quantity >= 3) {
 			stock += "Product: " + this.productName + " is low on stock";
+			return stock;
+		}
+		else if(this.quantity == 0) {
+			stock += "Product: " + this.productName + " is out of stock";
 			return stock;
 		}
 		return "";
