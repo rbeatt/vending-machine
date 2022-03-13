@@ -173,7 +173,6 @@ public class UserApp {
 
 	private static void completePurchase(double moneyPaid, double actualCost) {
 		Scanner input = new Scanner(System.in);
-		try {
 			String[] options = { "Yes", "No" };
 			Menu inputMenu = new Menu("\nWould you like to make another purchase?", options); // Prompts user
 			boolean finished = false;
@@ -200,10 +199,6 @@ public class UserApp {
 				}
 			} while (!finished);
 			input.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 }

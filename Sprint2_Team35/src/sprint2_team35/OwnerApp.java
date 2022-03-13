@@ -14,7 +14,7 @@ public class OwnerApp {
 		// Array of menu options
 		
 		String [] options = { "Restock machine", "Top up tubes", 
-				"View total in cashbox and tubes", "Set prices", "Reset cashbox", "Exit Owner Mode" };
+				"View total in cashbox and tubes", "Set prices", "Reset cashbox", "Perform a software update", "Adjust product details", "Exit Owner Mode" };
 		Menu vendingMenu = new Menu("\nOwner Mode", options);
 		
 		boolean finished = false; 
@@ -31,7 +31,7 @@ public class OwnerApp {
 				break;
 			case 5: resetCashbox();
 				break;
-			case 6:
+			case 6: softwareUpdate();
 				break;
 			case 7:
 				break;
@@ -247,16 +247,37 @@ public class OwnerApp {
 		
 	}
 	
+	/**
+	 * This method simulates performing a software update on the vending machine using methods from USBDevice.
+	 */
+	
 	private static void softwareUpdate() {
-		Scanner sc = new Scanner(System.in);
 		if (machine.detectUSB()) {
+			String [] options = {"Yes", "No"};
+			Menu updateMenu = new Menu("\nWould you like to perform a software update with this device?", options);
 			
-			machine.listUSBContents();
-			System.out.println("Please enter the file you'd like to perform an update from: ");
-			machine.readUSBContents(sc.nextLine());
+			boolean finished = false; 
+			do {
+				int option = updateMenu.getUserChoice();
+				switch (option) {
+				case 1:
+					System.out.println(machine.listUSBContents());
+					System.out.println("\nPlease enter the file you'd like to perform an update from: ");
+					System.out.println(machine.readUSBContents(myScanner.nextLine()));
+					finished = true;
+					break;
+				case 2:
+					finished = true;
+					break;
+				default:
+					System.out.println("\nNot a valid option."); // Displays when an invalid option is entered
+					break;
+				}
+			}
+			while (!finished); // Loop finishes when boolean value is true
 		}
 		else {
-			System.out.println("A USB device has not been inserted");
+			System.out.println("\nA USB device has not been inserted");
 		}
 	}
 	
