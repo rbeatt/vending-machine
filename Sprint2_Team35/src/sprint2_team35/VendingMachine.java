@@ -16,7 +16,7 @@ public class VendingMachine {
 	private Item[][] item = new Item[5][5];
 	private CashBox cashbox = new CashBox();
 	private double credit = 0;
-	private USBDevice USBPort = new USBDevice(); // USBDevice object
+	private USBDevice usbPort = new USBDevice(); // USBDevice object
 
 	/**
 	 * Constructor method for VendingMachine object. Loads the relevant item and
@@ -483,7 +483,7 @@ public class VendingMachine {
 	 */
 
 	public boolean detectUSB() {
-		if (USBPort.detectUSB()) {
+		if (usbPort.detectUSB()) {
 			return true;
 		} else {
 			return false;
@@ -497,7 +497,7 @@ public class VendingMachine {
 	 */
 
 	public String listUSBContents() {
-		return USBPort.listContents(USBPort.getDeviceName());
+		return usbPort.listContents(usbPort.getDeviceName());
 	}
 
 	/**
@@ -508,7 +508,7 @@ public class VendingMachine {
 	 */
 
 	public String readUSBContents(String fileName) {
-		return USBPort.readContents(USBPort.getDeviceName(), fileName);
+		return usbPort.readContents(usbPort.getDeviceName(), fileName);
 
 	}
 

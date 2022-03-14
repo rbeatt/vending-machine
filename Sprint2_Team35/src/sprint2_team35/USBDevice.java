@@ -66,11 +66,11 @@ public class USBDevice {
 
 		for (int i = 0; i < driveLetters.length; i++) {
 			listDrives[i] = new File(driveLetters[i] + ":/");
-			isDrive[i] = listDrives[i].canRead(); // .canRead returns true if the file location exists
+			isDrive[i] = listDrives[i].canRead(); // .canRead returns true if the file location exists and can be read from
 		}
-
-		System.out.println("\nWaiting for USB device to perform software update...");
-
+		
+			System.out.println("\nWaiting for USB device...");
+			
 		while (!this.insertDrive) {
 			for (int i = 0; i < driveLetters.length; i++) {
 				boolean insertDrive = listDrives[i].canRead();
@@ -79,10 +79,10 @@ public class USBDevice {
 					if (insertDrive) {
 						this.setDeviceName(driveLetters[i] + ":/");
 						this.setInsertDrive(true);
-						System.out.println("\nThe USB drive " + this.deviceName + " has been inserted.");
+						System.out.println("\nThe USB device " + this.deviceName + " has been inserted.");
 						
 					} else {
-						System.out.println("\nThe USB drive " + this.deviceName + " has been ejected.");
+						System.out.println("\nThe USB device " + this.deviceName + " has been ejected.");
 						isDrive[i] = insertDrive;
 						this.setInsertDrive(false);
 					}
