@@ -17,6 +17,8 @@ public class VendingMachine {
 	private CashBox cashbox = new CashBox();
 	private double credit = 0;
 	private USBDevice usbPort = new USBDevice(); // USBDevice object
+	private static String username = "name";
+	private static String password = "12345";
 
 	/**
 	 * Constructor method for VendingMachine object. Loads the relevant item and
@@ -68,6 +70,26 @@ public class VendingMachine {
 
 	public double getCredit() {
 		return this.credit;
+	}
+	
+	/**
+	 * Get method for the username of a customer's account.
+	 * 
+	 * @return - the username
+	 */
+
+	public String getUsername() {
+		return username;
+	}
+	
+	/**
+	 * Get method for the password of a customer's account.
+	 * 
+	 * @return - the password
+	 */
+
+	public String getPassword() {
+		return password;
 	}
 
 	/**
@@ -218,9 +240,9 @@ public class VendingMachine {
 			myPw.flush();
 			myPw.println("50p," + this.cashbox.Total50s);
 			myPw.flush();
-			myPw.println("Â£1," + this.cashbox.TotalPounds);
+			myPw.println("£1," + this.cashbox.TotalPounds);
 			myPw.flush();
-			myPw.println("Â£2," + this.cashbox.Total2Pounds);
+			myPw.println("£2," + this.cashbox.Total2Pounds);
 			myPw.flush();
 			System.out.println("Cashbox data written successfully.");
 		} catch (IOException e) {
