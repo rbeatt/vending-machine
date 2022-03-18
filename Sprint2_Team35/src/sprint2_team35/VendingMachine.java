@@ -13,7 +13,7 @@ import java.io.FileNotFoundException;
 
 public class VendingMachine {
 
-	private Item[][] item = new Item[5][5];
+	private GenericProducts[][] item = new GenericProducts[5][5];
 	private CashBox cashBox = new CashBox();
 	private CashBox eurCashBox = new EuroCashBox();
 	private double credit = 0;
@@ -48,7 +48,7 @@ public class VendingMachine {
 	 * @return - the item's cost
 	 */
 	public double getCost(int row, int column) {
-		return item[row][column].getCost();
+		return item[row][column].getPrice();
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class VendingMachine {
 	 */
 
 	public void setItemName(int row, int column, String name) {
-		item[row][column].setName(name);
+		item[row][column].setProductName(name);
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class VendingMachine {
 	 */
 
 	public void setItemCost(int row, int column, double cost) {
-		item[row][column].setCost(cost);
+		item[row][column].setPrice(cost);
 	}
 
 	/**
@@ -222,8 +222,8 @@ public class VendingMachine {
 						rowStr = "E";
 						break;
 					}
-					myPw.println(rowStr + (column + 1) + "," + item[row][column].getName() + ","
-							+ item[row][column].getCost() + "," + item[row][column].getQuantity());
+					myPw.println(rowStr + (column + 1) + "," + item[row][column].getProductName() + ","
+							+ item[row][column].getPrice() + "," + item[row][column].getQuantity());
 					myPw.flush();
 				}
 			}
@@ -285,7 +285,7 @@ public class VendingMachine {
 
 		for (int row = 0; row < 5; row++) {
 			for (int column = 0; column < 5; column++) {
-				this.item[row][column] = new Item();
+				this.item[row][column] = new GenericProducts();
 			}
 		}
 
@@ -406,9 +406,11 @@ public class VendingMachine {
 	public int purchaseProduct(int row, int column) {
 
 		if (item[row][column].getQuantity() > 0) {
-			if (item[row][column].getCost() <= this.credit) {
+			if (item[row][column].getPrice() <= this.credit) {
 				item[row][column].setQuantity(item[row][column].getQuantity() - 1);
-				this.credit -= item[row][column].getCost();
+				item[row][column].setProductSaleCount(item[row][column].getSaleCount() + 1);
+				this.credit -= item[row][column].getPrice();
+				item[row][column].lowOnProducts();
 				return 1; // Product purchased successfully
 			} else {
 				return 2; // Insufficient credit
@@ -454,5 +456,93 @@ public class VendingMachine {
 		return usbPort.readContents(usbPort.getDeviceName(), fileName);
 
 	}
+	
+	/**
+	 * returns a single String containing the product name, product type, product price, quantity and sale count for
+	 * the items objects within the system (ordered by sale count,
+	 * highest to lowest)
+	 * @return
+	 */
+	public String highestSaleCounts() {
+		if(item.length > 0) {
+			GenericProducts data[] = new GenericProducts[item.length];
+			int index = 0;
+			for (GenericProducts[] items : item) {
+				data[index] = items[index];
+				index++;
+			}
+			sortSaleCount(data);
+			displaySaleCount(data);
+		}
+		return null;
+	}
+
+	/**
+	 * 
+	 * @param items
+	 */
+	private static void sortSaleCount(GenericProducts items[]) {
+		int swaps;
+		do {
+			swaps = 0;
+			for (int index = 0; index < items.length - 1; index++) {
+				if (items[index].getSaleCount() < items[index + 1].getSaleCount()) {
+					GenericProducts temp = items[index];
+					items[index] = items[index + 1];
+					items[index + 1] = temp;
+					swaps++;
+				}
+			}
+		} while (swaps > 0);
+	}
+
+	/**
+	 * 
+	 * @param items
+	 * @return
+	 */
+	private static String displaySaleCount(GenericProducts items[]) {
+		if (items != null && items.length > 0) {
+			for (int index = 0; index < items.length;) {
+				return "Product Name: " + items[index++].getProductName() + " Product Type: " + items[index++].getProductType() 
+						+ " Price: " + items[index++].getPrice() + " Quantity: " + items[index++].getQuantity() + " Sales: " + items[index++].getSaleCount();
+			}
+		}
+		return "No data to display.";
+	}
+	
+	private GenericProducts searchProduct(String productName) {
+		int index = 0;
+		for (GenericProducts products[] : item) {
+			String art = products[index++].getProductName();
+			if (productName.equals(art)) {
+				return products[index];
+			}
+		}
+	
+	return null;
+}
+
+private String[] getProductInfo(String productName) {
+	if(item.length > 0) {
+		String data[] = new String[item.length];
+		int index1 = 0;
+		int index2 = 0;
+		GenericProducts product = searchProduct(productName);
+		if(product != null) {
+			for (GenericProducts products[] : item) {
+				String item = products[index1++].getProductName();
+				if(productName.equals(item)) {
+					data[index2++] = products[index1].toString();
+				}
+			}
+			return data;
+		}
+		else {
+			return null;
+		}
+	}
+	return null;
+}
 
 }
