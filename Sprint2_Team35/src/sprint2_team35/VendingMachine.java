@@ -14,7 +14,8 @@ import java.io.FileNotFoundException;
 public class VendingMachine {
 
 	private Item[][] item = new Item[5][5];
-	private CashBox cashbox = new CashBox();
+	private CashBox cashBox = new CashBox();
+	private CashBox eurCashBox = new EuroCashBox();
 	private double credit = 0;
 	private USBDevice usbPort = new USBDevice(); // USBDevice object
 
@@ -57,7 +58,7 @@ public class VendingMachine {
 	 */
 
 	public String getCashbox() {
-		return this.cashbox.toString();
+		return this.cashBox.toString();
 	}
 
 	/**
@@ -116,12 +117,12 @@ public class VendingMachine {
 	 * @param twopound - the quantity of �2s
 	 */
 
-	public void setTubes(int tenp, int twentyp, int fiftyp, int pound, int twopound) {
-		this.cashbox.Total10s = tenp;
-		this.cashbox.Total20s = twentyp;
-		this.cashbox.Total50s = fiftyp;
-		this.cashbox.TotalPounds = pound;
-		this.cashbox.Total2Pounds = twopound;
+	public void setTubes(CashBox cashBox, int ten, int twenty, int fifty, int one, int two) {
+		cashBox.setTotal10s(ten);
+		cashBox.setTotal20s(twenty);
+		cashBox.setTotal50s(fifty);
+		cashBox.setTotal1s(one);
+		cashBox.setTotal2s(two);
 	}
 
 	/**
@@ -134,42 +135,8 @@ public class VendingMachine {
 	 * @param twopound - the quantity of �2s to add
 	 */
 
-	public void addTubes(int tenp, int twentyp, int fiftyp, int pound, int twopound) {
-		this.cashbox.Total10s += tenp;
-		if (this.cashbox.Total10s < 0) {
-			this.cashbox.Total10s = 0;
-		}
-		if (this.cashbox.Total10s > 50) {
-			this.cashbox.Total10s = 50;
-		}
-		this.cashbox.Total20s += twentyp;
-		if (this.cashbox.Total20s < 0) {
-			this.cashbox.Total20s = 0;
-		}
-		if (this.cashbox.Total20s > 50) {
-			this.cashbox.Total20s = 50;
-		}
-		this.cashbox.Total50s += fiftyp;
-		if (this.cashbox.Total50s < 0) {
-			this.cashbox.Total50s = 0;
-		}
-		if (this.cashbox.Total50s > 50) {
-			this.cashbox.Total50s = 50;
-		}
-		this.cashbox.TotalPounds += pound;
-		if (this.cashbox.TotalPounds < 0) {
-			this.cashbox.TotalPounds = 0;
-		}
-		if (this.cashbox.TotalPounds > 50) {
-			this.cashbox.TotalPounds = 50;
-		}
-		this.cashbox.Total2Pounds += twopound;
-		if (this.cashbox.Total2Pounds < 0) {
-			this.cashbox.Total2Pounds = 0;
-		}
-		if (this.cashbox.Total2Pounds > 50) {
-			this.cashbox.Total2Pounds = 50;
-		}
+	public void addTubes(int ten, int twenty, int fifty, int one, int two) {
+		this.cashBox.addTubes(ten, twenty, fifty, one, two);
 	}
 
 	/**
@@ -187,7 +154,7 @@ public class VendingMachine {
 	 */
 
 	public void resetCashbox() {
-		this.cashbox.CashBoxAmount = 0;
+		this.cashBox.setCashBoxAmount(0.00);
 	}
 
 	/**
@@ -208,19 +175,19 @@ public class VendingMachine {
 			myPw.flush();
 			myPw.println("Total money in cashbox");
 			myPw.flush();
-			myPw.println(this.cashbox.CashBoxAmount);
+			myPw.println(this.cashBox.getCashBoxAmount());
 			myPw.flush();
 			myPw.println("Coins in tubes\nValue,Quantity");
 			myPw.flush();
-			myPw.println("10p," + this.cashbox.Total10s);
+			myPw.println("10p," + this.cashBox.getTotal10s());
 			myPw.flush();
-			myPw.println("20p," + this.cashbox.Total20s);
+			myPw.println("20p," + this.cashBox.getTotal20s());
 			myPw.flush();
-			myPw.println("50p," + this.cashbox.Total50s);
+			myPw.println("50p," + this.cashBox.getTotal50s());
 			myPw.flush();
-			myPw.println("£1," + this.cashbox.TotalPounds);
+			myPw.println("£1," + this.cashBox.getTotal1s());
 			myPw.flush();
-			myPw.println("£2," + this.cashbox.Total2Pounds);
+			myPw.println("£2," + this.cashBox.getTotal2s());
 			myPw.flush();
 			System.out.println("Cashbox data written successfully.");
 		} catch (IOException e) {
@@ -287,9 +254,9 @@ public class VendingMachine {
 			try {
 				myScanner.nextLine();
 				double total = myScanner.nextDouble();
-				this.cashbox.CashBoxAmount = total;
-				if (this.cashbox.CashBoxAmount < 0) {
-					this.cashbox.CashBoxAmount = 0;
+				this.cashBox.setCashBoxAmount(total);
+				if (this.cashBox.getCashBoxAmount() < 0) {
+					this.cashBox.setCashBoxAmount(0.00);
 				}
 				myScanner.nextLine();
 				myScanner.nextLine();
@@ -307,11 +274,11 @@ public class VendingMachine {
 				setTubes(tenp, twentyp, fiftyp, pound, twopound);
 			} catch (Exception e) {
 				System.out.println("Error occurred when loading cashbox data.\n");
-				this.cashbox.CashBoxAmount = 0;
+				this.cashBox.setCashBoxAmount(0.00);
 			}
 		} catch (FileNotFoundException e) {
 			System.out.println("Error occurred when loading cashbox data.\n");
-			this.cashbox.CashBoxAmount = 0;
+			this.cashBox.setCashBoxAmount(0.00);
 		}
 
 		// Loading item data
@@ -382,38 +349,13 @@ public class VendingMachine {
 	 */
 
 	public String giveChange(double moneyPaid, double actualCost) {
-		int[] change = { 0, 0, 0, 0, 0 };
-		while (moneyPaid - actualCost >= 1.99 && this.cashbox.Total2Pounds > 0) {
-			change[4] += 1;
-			this.cashbox.Total2Pounds -= 1;
-			moneyPaid -= 2.0;
-		}
-		while (moneyPaid - actualCost >= 0.99 && this.cashbox.TotalPounds > 0) {
-			change[3] += 1;
-			this.cashbox.TotalPounds -= 1;
-			moneyPaid -= 1.0;
-		}
-		while (moneyPaid - actualCost >= 0.49 && this.cashbox.Total50s > 0) {
-			change[2] += 1;
-			this.cashbox.Total50s -= 1;
-			moneyPaid -= 0.50;
-		}
-		while (moneyPaid - actualCost >= 0.19 && this.cashbox.Total20s > 0) {
-			change[1] += 1;
-			this.cashbox.Total20s -= 1;
-			moneyPaid -= 0.20;
-		}
-		while (moneyPaid - actualCost >= 0.09 && this.cashbox.Total10s > 0) {
-			change[0] += 1;
-			this.cashbox.Total10s -= 1;
-			moneyPaid -= 0.10;
-		}
+		int[] change = cashBox.giveChange(moneyPaid, actualCost);
 		String changeStr = "Change given: ";
 		if (change[4] > 0) {
-			changeStr += change[4] + " �2 coin(s), ";
+			changeStr += change[4] + " �2 coin(s), ";
 		}
 		if (change[3] > 0) {
-			changeStr += change[3] + " �1 coin(s), ";
+			changeStr += change[3] + " �1 coin(s), ";
 		}
 		if (change[2] > 0) {
 			changeStr += change[2] + " 50p coin(s), ";
@@ -442,14 +384,27 @@ public class VendingMachine {
 	 * @return - the total credit
 	 */
 
-	public double addCredit(double coin) {
-		if (coin == 0.10 || coin == 0.20 || coin == 0.50 || coin == 1.0 || coin == 2.0) {
-			this.credit += coin;
-			this.cashbox.EnterCoin(coin);
-			return this.credit;
-		} else {
-			return 0;
+	public double addCredit(String currency, double coin) {
+		switch(currency) {
+		case "GBP":
+			if (coin == 0.10 || coin == 0.20 || coin == 0.50 || coin == 1.0 || coin == 2.0) {
+				this.credit += coin;
+				this.cashBox.enterCoin(coin);
+				return this.credit;
+			} else {
+				return 0;
+			}
+		case "EUR":
+			if (coin == 0.10 || coin == 0.20 || coin == 0.50 || coin == 1.0 || coin == 2.0) {
+				this.credit += coin;
+				this.cashBox.enterCoin(coin);
+				return this.credit;
+			} else {
+				return 0;
+			}
 		}
+		
+		return 0;
 	}
 
 	/**
@@ -463,7 +418,7 @@ public class VendingMachine {
 	public int purchaseProduct(int row, int column) {
 
 		if (item[row][column].getQuantity() > 0) {
-			if (item[row][column].getCost() < this.credit) {
+			if (item[row][column].getCost() <= this.credit) {
 				item[row][column].setQuantity(item[row][column].getQuantity() - 1);
 				this.credit -= item[row][column].getCost();
 				return 1; // Product purchased successfully
