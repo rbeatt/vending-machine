@@ -2,15 +2,91 @@ package sprint2_team35;
 
 import java.text.DecimalFormat;
 import java.util.Scanner;
+import java.util.Random;
 
 public class UserApp {
 
 	private static final DecimalFormat df = new DecimalFormat("0.00"); // Decimal format
+	private static final Scanner input = new Scanner(System.in); // Scanner object
 
 	public static VendingMachine machine = new VendingMachine(); // Creates VendingMachine object 
-
+	
 	public static void main(String[] args) {
-		addCredit(); // Initial state
+		verifyIdentity(); // Initial state
+	}
+	
+	/**
+	 * This method lets a user verify their identity using either login details or simulated facial recognition.
+	 */
+	
+	public static void verifyIdentity() {
+		
+		String[] options = {"Username and Password","Facial Recognition"};
+		String title = "Select a method to log in:";
+		Menu loginMenu = new Menu(title, options);
+		
+		boolean finished = false;
+		do {
+			int option = loginMenu.getUserChoice();
+			switch (option) {
+			case 1:
+				logIn();
+				finished = true;
+				break;
+			case 2:
+				facialRecognition();
+				finished = true;
+				break;
+			default:
+				System.out.println("\nNot a valid option."); // Displays when an invalid option is entered
+				break;
+			}
+		} while (!finished); // Loop finishes when boolean value is true
+		
+		verifyIdentity(); // Returns to initial state
+		
+	}
+	
+	/**
+	 * This method simulates a user logging into an account.
+	 */
+	
+	private static void logIn() {		
+		
+		System.out.println("Please input username:\n(For simulation purposes, correct username is 'name')");
+		String inputUsername = input.nextLine();
+		System.out.println("Please input password:\n(For simulation purposes, correct password is '12345')");
+		String inputPassword = input.nextLine();
+		
+		if (inputUsername.matches("name") && inputPassword.matches("12345")) {
+			System.out.println("Login successful!\n");
+			addCredit();
+		}
+		else {
+			System.out.println("Sorry, username or password is incorrect. Please try again.\n");
+			verifyIdentity();
+		}
+		
+	}
+	
+	/**
+	 * This method simulates a user verifying their identity with facial recognition.
+	 */
+	
+	private static void facialRecognition() {
+		
+		System.out.println("Scanning face...");
+		
+		Random rand = new Random();
+		if (rand.nextInt(2) == 1) {
+			System.out.println("Face recognised! You are now logged in.\n");
+			addCredit();
+		}
+		else {
+			System.out.println("Sorry, face not recognised. Please try again.\n");
+			verifyIdentity();
+		}
+		
 	}
 	
 	/**
@@ -19,7 +95,7 @@ public class UserApp {
 	 */
 
 	private static void addCredit() {
-		Scanner input = new Scanner(System.in);
+		
 		boolean finished = false;
 
 		do {
@@ -47,7 +123,6 @@ public class UserApp {
 
 		displayInfo();
 
-		input.close();
 	}
 	
 	/**
@@ -55,7 +130,6 @@ public class UserApp {
 	 */
 
 	private static void displayInfo() {
-		Scanner input = new Scanner(System.in);
 
 		System.out.println("Please make a selection: ");
 		String selection = input.nextLine();
@@ -104,7 +178,6 @@ public class UserApp {
 			completePurchase(machine.getCredit(), 0.0);
 		}
 
-		input.close();
 	}
 	
 	/**
@@ -114,7 +187,6 @@ public class UserApp {
 	 */
 
 	private static void purchaseProduct(int row, int column) {
-		Scanner input = new Scanner(System.in);
 		double moneyPaid = machine.getCredit(); // Assigns the credit to a variable to be used to calculate change
 		double actualCost = 0.0; // Cost of products purchased
 
@@ -157,7 +229,6 @@ public class UserApp {
 				}
 			} while (!finished);
 
-			input.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -172,7 +243,6 @@ public class UserApp {
 	 */
 
 	private static void completePurchase(double moneyPaid, double actualCost) {
-		Scanner input = new Scanner(System.in);
 			String[] options = { "Yes", "No" };
 			Menu inputMenu = new Menu("\nWould you like to make another purchase?", options); // Prompts user
 			boolean finished = false;
@@ -198,7 +268,6 @@ public class UserApp {
 					break;
 				}
 			} while (!finished);
-			input.close();
 	}
 
 }

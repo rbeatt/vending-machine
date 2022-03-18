@@ -5,8 +5,8 @@ import java.text.DecimalFormat;
 public class EuroCashBox extends CashBox implements ICashBox {
 	
 	
-	public EuroCashBox(int total10s, int total20s, int total50s, int total1s, int total2s) {
-		super(total10s, total20s, total50s, total1s, total2s);
+	public EuroCashBox() {
+		super();
 	}
 	
 	@Override
