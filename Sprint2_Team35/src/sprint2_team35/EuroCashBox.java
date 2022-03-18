@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 
 public class EuroCashBox extends CashBox implements ICashBox {
 	
+	private static final DecimalFormat df = new DecimalFormat("0.00");	
 	
 	public EuroCashBox() {
 		super();
@@ -87,7 +88,7 @@ public class EuroCashBox extends CashBox implements ICashBox {
 	@Override
 	public String toString() {
 		String desc = "Total in collection box: €";
-		desc += df.format(cashBoxAmount);
+		desc += df.format(super.getCashBoxAmount());
 		desc += "\nCoins in tubes: ";
 		desc += "\n10c: " + getTotal10s();
 		desc += "\n20c: " + getTotal20s();
