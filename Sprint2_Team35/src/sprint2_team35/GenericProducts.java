@@ -1,10 +1,16 @@
 package sprint2_team35;
 
+import java.text.DecimalFormat;
+
 public class GenericProducts implements IProducts{
+	
+	private static final DecimalFormat df = new DecimalFormat("0.00");
+	
 	private String productName;			//Product name
 	private ProductType productType;	//Product type e.g. food, drink
 	private double price;				//Product's price
-	private int quantity;					//Product's amount
+	private int quantity;				//Product's amount
+	private int saleCount;				//Product's sale amount
 	
 	/**
 	 *  A empty constructor
@@ -21,11 +27,12 @@ public class GenericProducts implements IProducts{
 	 * @param price
 	 * @param quantity
 	 */
-	public GenericProducts(String productName, ProductType productType ,double price, int quantity) {
+	public GenericProducts(String productName, ProductType productType ,double price, int quantity, int saleCount) {
 		this.productName = productName;
 		this.productType = productType;
 		this.price = price;
 		this.quantity = quantity;
+		this.saleCount = saleCount;
 	}
 	
 	
@@ -80,6 +87,10 @@ public class GenericProducts implements IProducts{
 		return this.quantity;
 	}
 	
+	public int getSaleCount() {
+		return this.saleCount;
+	}
+	
 	/**
 	 * 
 	 * @param productName
@@ -99,7 +110,7 @@ public class GenericProducts implements IProducts{
 	 * @param price
 	 */
 	public void setPrice(double price) {
-		double check = (price % 0.1);			//If modulus 10p is 0 then it will accept the value so change can be given out
+		double check = ((price * 100) % 10);			//If modulus 10p is 0 then it will accept the value so change can be given out
 		if(check == 0) {
 			this.price = price;
 		}
@@ -110,20 +121,44 @@ public class GenericProducts implements IProducts{
 	 * @param count
 	 */
 	public void setQuantity(int quantity) {
-		if(quantity > 0) {
-			this.quantity += quantity;
+		if(quantity >= 0 && quantity <= 20) {
+			this.quantity = quantity;
+		}
+		else if(quantity < 0) {
+			this.quantity = 0;
+		}
+		else if(quantity > 20) {
+			this.quantity = 20;
 		}
 	}
 	
-	/**
-	 * 
-	 */
-	public String purchase() {
-		String buy = "";
-		buy += "You have bought: " + this.productName + " for £" + this.price;
-		this.quantity--;
-		lowOnProducts();
-		return buy;
+	public void setProductType(ProductType productType) {
+		switch (productType) {
+		case FOOD:
+			this.productType = ProductType.FOOD;
+			break;
+		case DRINK:
+			this.productType = ProductType.DRINK;
+			break;
+		case ACCESSORY:
+			this.productType = ProductType.ACCESSORY;
+			break;
+		case CLOTHING:
+			this.productType = ProductType.CLOTHING;
+			break;
+		default:
+			this.productType = ProductType.OTHER;
+			break;
+		}
+	}
+	
+	public void setProductSaleCount(int saleCount) {
+		if(saleCount <= 0) {
+			this.saleCount = 0;
+		}
+		else {
+			this.saleCount = saleCount;
+		}
 	}
 	
 	/**
@@ -132,12 +167,12 @@ public class GenericProducts implements IProducts{
 	 */
 	public String lowOnProducts() {
 		String stock = "";
-		if(this.quantity >= 3) {
-			stock += "Product: " + this.productName + " is low on stock";
+		if(this.quantity <= 3) {
+			stock += "Product is low on stock";
 			return stock;
 		}
-		else if(this.quantity == 0) {
-			stock += "Product: " + this.productName + " is out of stock";
+		else if(this.quantity <= 0){
+			stock += "Product is out of stock";
 			return stock;
 		}
 		return "";
@@ -147,7 +182,7 @@ public class GenericProducts implements IProducts{
 	 * 
 	 */
 	public String toString() {
-        String details = this.productName + "," +  this.price + "," + this.quantity;
+        String details = this.productName + "," + this.productType + "," +  df.format(this.price) + "," + this.quantity + "," + this.saleCount;
         return details;
     }
 }
