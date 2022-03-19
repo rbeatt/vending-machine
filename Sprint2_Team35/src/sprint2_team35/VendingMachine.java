@@ -40,6 +40,18 @@ public class VendingMachine {
 	public String getItem(int row, int column) {
 		return item[row][column].toString();
 	}
+	
+	public CashBox getCashBox(String currency) {
+		if (currency == "EUR") {
+			return this.eurCashBox;
+		}
+		else if (currency == "GBP") {
+			return this.cashBox;
+		}
+		else {
+			return this.cashBox;
+		}
+	}
 
 	/**
 	 * Get method for an item cost in the machine.
@@ -58,8 +70,8 @@ public class VendingMachine {
 	 * @return - the cashbox data, as a string
 	 */
 
-	public String getCashbox() {
-		return this.cashBox.toString();
+	public String getCashbox(CashBox cashbox) {
+		return cashbox.toString();
 	}
 
 	/**
@@ -140,12 +152,12 @@ public class VendingMachine {
 	 * @param two    - the quantity of ï¿½2s
 	 */
 
-	public void setTubes(int ten, int twenty, int fifty, int one, int two) {
-		this.cashBox.setTotal10s(ten);
-		this.cashBox.setTotal20s(twenty);
-		this.cashBox.setTotal50s(fifty);
-		this.cashBox.setTotal1s(one);
-		this.cashBox.setTotal2s(two);
+	public void setTubes(CashBox cashbox, int ten, int twenty, int fifty, int one, int two) {
+		cashbox.setTotal10s(ten);
+		cashbox.setTotal20s(twenty);
+		cashbox.setTotal50s(fifty);
+		cashbox.setTotal1s(one);
+		cashbox.setTotal2s(two);
 	}
 
 	/**
@@ -154,16 +166,16 @@ public class VendingMachine {
 	 * @param ten    - the quantity of 10cs
 	 * @param twenty - the quantity of 20cs
 	 * @param fifty  - the quantity of 50cs
-	 * @param one    - the quantity of €1s
-	 * @param two    - the quantity of €2s
+	 * @param one    - the quantity of ï¿½1s
+	 * @param two    - the quantity of ï¿½2s
 	 */
 
-	public void setEuroTubes(int ten, int twenty, int fifty, int one, int two) {
-		this.eurCashBox.setTotal10s(ten);
-		this.eurCashBox.setTotal20s(twenty);
-		this.eurCashBox.setTotal50s(fifty);
-		this.eurCashBox.setTotal1s(one);
-		this.eurCashBox.setTotal2s(two);
+	public void setEuroTubes(CashBox cashbox, int ten, int twenty, int fifty, int one, int two) {
+		cashbox.setTotal10s(ten);
+		cashbox.setTotal20s(twenty);
+		cashbox.setTotal50s(fifty);
+		cashbox.setTotal1s(one);
+		cashbox.setTotal2s(two);
 	}
 
 	/**
@@ -176,8 +188,8 @@ public class VendingMachine {
 	 * @param two    - the quantity of ï¿½2s to add
 	 */
 
-	public void addTubes(int ten, int twenty, int fifty, int one, int two) {
-		this.cashBox.addTubes(ten, twenty, fifty, one, two);
+	public void addTubes(CashBox cashbox, int ten, int twenty, int fifty, int one, int two) {
+		cashbox.addTubes(ten, twenty, fifty, one, two);
 	}
 
 	/**
@@ -186,8 +198,8 @@ public class VendingMachine {
 	 * @param ten    - the quantity of 10cs to add
 	 * @param twenty - the quantity of 20cs to add
 	 * @param fifty  - the quantity of 50cs to add
-	 * @param one    - the quantity of €1s to add
-	 * @param two    - the quantity of €2s to add
+	 * @param one    - the quantity of ï¿½1s to add
+	 * @param two    - the quantity of ï¿½2s to add
 	 */
 
 	public void addEuroTubes(int ten, int twenty, int fifty, int one, int two) {
@@ -208,8 +220,8 @@ public class VendingMachine {
 	 * This method resets the value in the collection box to ï¿½0.
 	 */
 
-	public void resetCashbox() {
-		this.cashBox.setCashBoxAmount(0.00);
+	public void resetCashbox(CashBox cashbox) {
+		cashbox.setCashBoxAmount(0.00);
 	}
 
 	/**
@@ -217,8 +229,16 @@ public class VendingMachine {
 	 * files.
 	 */
 
-	public void saveToFile() {
-
+	public void saveToFile(CashBox cashbox) {
+		String path;
+		
+		if (cashbox == this.eurCashBox) {
+			path = "EURcashbox.csv";
+		}
+		else if (cashbox == this.cashBox) {
+			path = "cashbox.csv";
+		}
+		
 		String myDir;
 		PrintWriter myPw = null;
 
@@ -265,9 +285,9 @@ public class VendingMachine {
 			myPw.flush();
 			myPw.println("50c," + this.eurCashBox.getTotal50s());
 			myPw.flush();
-			myPw.println("€1," + this.eurCashBox.getTotal1s());
+			myPw.println("ï¿½1," + this.eurCashBox.getTotal1s());
 			myPw.flush();
-			myPw.println("€2," + this.eurCashBox.getTotal2s());
+			myPw.println("ï¿½2," + this.eurCashBox.getTotal2s());
 			myPw.flush();
 			System.out.println("Euro cashbox data written successfully.");
 		} catch (IOException e) {
@@ -352,7 +372,7 @@ public class VendingMachine {
 				int euro = Integer.parseInt(cashboxStr[1]);
 				cashboxStr = myScanner.nextLine().split(",");
 				int twoeuro = Integer.parseInt(cashboxStr[1]);
-				setTubes(tenc, twentyc, fiftyc, euro, twoeuro);
+				setTubes(eurCashBox,tenc, twentyc, fiftyc, euro, twoeuro);
 			} catch (Exception e) {
 				System.out.println("Error occurred when loading cashbox data.\n");
 				this.cashBox.setCashBoxAmount(0.00);
@@ -385,7 +405,7 @@ public class VendingMachine {
 				int euro = Integer.parseInt(cashboxStr[1]);
 				cashboxStr = myScanner.nextLine().split(",");
 				int twoeuro = Integer.parseInt(cashboxStr[1]);
-				setEuroTubes(tenc, twentyc, fiftyc, euro, twoeuro);
+				setTubes(eurCashBox, tenc, twentyc, fiftyc, euro, twoeuro);
 			} catch (Exception e) {
 				System.out.println("Error occurred when loading Euro cashbox data.\n");
 				this.eurCashBox.setCashBoxAmount(0.00);

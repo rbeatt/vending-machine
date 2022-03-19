@@ -25,16 +25,16 @@ public class OwnerApp {
 				restockMachine();
 				break;
 			case 2:
-				topUpTubes();
+				topUpTubes(getCurrency());
 				break;
 			case 3:
-				viewTotal();
+				viewTotal(getCurrency());
 				break;
 			case 4:
 				setPrices();
 				break;
 			case 5:
-				resetCashbox();
+				resetCashbox(getCurrency());
 				break;
 			case 6:
 				softwareUpdate();
@@ -53,6 +53,28 @@ public class OwnerApp {
 				break;
 			}
 		} while (!finished); // Loop finishes when boolean value is true
+	}
+	
+	private static CashBox getCurrency() {
+		boolean finished = false;
+		String[] currencies = { "GBP", "EUR" };
+		Menu currencyMenu = new Menu("\nPlease select which cash box you would like to interact with: ", currencies);
+		do {
+			int option = currencyMenu.getUserChoice();
+			switch(option) {
+			case 1:
+				finished = true;
+				return machine.getCashBox(currencies[0]);
+			case 2:
+				finished = true;
+				return machine.getCashBox(currencies[1]);
+			default:
+				System.out.println("\nInvalid selection");
+				break;
+			}
+		} while (!finished);
+		
+		return null;
 	}
 
 	/**
@@ -104,7 +126,7 @@ public class OwnerApp {
 	 * This method lets a machine owner top up the change dispenser tubes.
 	 */
 
-	private static void topUpTubes() {
+	private static void topUpTubes(CashBox cashbox) {
 		// Adding 10s
 		System.out.println("How many 10s would you like to add?");
 		String Add10s = myScanner.nextLine(); // Read user input
@@ -132,7 +154,7 @@ public class OwnerApp {
 		System.out.println("Added: " + Add2s); // Output user input
 
 		try {
-			machine.addTubes(Integer.parseInt(Add10s), Integer.parseInt(Add20s), Integer.parseInt(Add50s),
+			machine.addTubes(cashbox, Integer.parseInt(Add10s), Integer.parseInt(Add20s), Integer.parseInt(Add50s),
 					Integer.parseInt(Add1s), Integer.parseInt(Add2s));
 			System.out.println("Coins added successfully.");
 		} catch (Exception e) {
@@ -146,8 +168,8 @@ public class OwnerApp {
 	 * and change dispenser tubes.
 	 */
 
-	private static void viewTotal() {
-		System.out.println("\n" + machine.getCashbox() + "\n");
+	private static void viewTotal(CashBox cashbox) {
+		System.out.println("\n" + machine.getCashbox(cashbox) + "\n");
 	}
 
 	/**
@@ -321,9 +343,9 @@ public class OwnerApp {
 	 * This method lets a machine owner reset the cashbox.
 	 */
 
-	private static void resetCashbox() {
+	private static void resetCashbox(CashBox cashbox) {
 		System.out.println("\nCashbox reset!");
-		machine.resetCashbox();
+		machine.resetCashbox(cashbox);
 		machine.saveToFile();
 	}
 	

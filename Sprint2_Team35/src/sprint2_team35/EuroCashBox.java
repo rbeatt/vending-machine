@@ -88,7 +88,7 @@ public class EuroCashBox extends CashBox implements ICashBox {
 	@Override
 	public String toString() {
 		String desc = "Total in collection box: €";
-		desc += df.format(super.getCashBoxAmount());
+		desc += df.format(this.getCashBoxAmount());
 		desc += "\nCoins in tubes: ";
 		desc += "\n10c: " + getTotal10s();
 		desc += "\n20c: " + getTotal20s();
