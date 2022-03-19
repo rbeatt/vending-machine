@@ -14,7 +14,7 @@ public class OwnerApp {
 		// Array of menu options
 
 		String[] options = { "Restock machine", "Top up tubes", "View total in cashbox and tubes", "Set prices",
-				"Reset cashbox", "Perform a software update", "Change item name", "Exit Owner Mode" };
+				"Reset cashbox", "Perform a software update", "Change item name","Show popular items" , "Exit Owner Mode" };
 		Menu vendingMenu = new Menu("\nOwner Mode", options);
 
 		boolean finished = false;
@@ -43,6 +43,9 @@ public class OwnerApp {
 				changeItemData();
 				break;
 			case 8:
+				showPopularItems();
+				break;
+			case 9:
 				finished = true;
 				break;
 			default:
@@ -322,6 +325,10 @@ public class OwnerApp {
 		System.out.println("\nCashbox reset!");
 		machine.resetCashbox();
 		machine.saveToFile();
+	}
+	
+	private static void showPopularItems() {
+		machine.highestSaleCounts();
 	}
 
 }

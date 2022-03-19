@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.Scanner;
+
 import java.io.FileNotFoundException;
 
 /**
@@ -84,6 +85,17 @@ public class VendingMachine {
 	}
 
 	/**
+	 * Set method for the type of an item in the machine
+	 * 
+	 * @param row
+	 * @param column
+	 * @param type
+	 */
+	public void setItemType(int row, int column, ProductType type) {
+		item[row][column].setProductType(type);
+	}
+
+	/**
 	 * Set method for the cost of an item in the machine.
 	 * 
 	 * @param row    - the row index of the item
@@ -108,13 +120,24 @@ public class VendingMachine {
 	}
 
 	/**
+	 * Set method for the sale count of an item in the machine
+	 * 
+	 * @param row
+	 * @param column
+	 * @param saleCount
+	 */
+	public void setItemSaleCount(int row, int column, int saleCount) {
+		item[row][column].setProductSaleCount(saleCount);
+	}
+
+	/**
 	 * Set method for the quantity of coins in tubes.
 	 * 
-	 * @param ten - the quantity of 10ps
+	 * @param ten    - the quantity of 10ps
 	 * @param twenty - the quantity of 20ps
-	 * @param fifty - the quantity of 50ps
-	 * @param one - the quantity of ï¿½1s
-	 * @param two - the quantity of ï¿½2s
+	 * @param fifty  - the quantity of 50ps
+	 * @param one    - the quantity of ï¿½1s
+	 * @param two    - the quantity of ï¿½2s
 	 */
 
 	public void setTubes(int ten, int twenty, int fifty, int one, int two) {
@@ -124,15 +147,15 @@ public class VendingMachine {
 		this.cashBox.setTotal1s(one);
 		this.cashBox.setTotal2s(two);
 	}
-	
+
 	/**
 	 * Set method for the quantity of Euro coins in tubes.
 	 * 
-	 * @param ten     - the quantity of 10cs
-	 * @param twenty  - the quantity of 20cs
-	 * @param fifty   - the quantity of 50cs
+	 * @param ten    - the quantity of 10cs
+	 * @param twenty - the quantity of 20cs
+	 * @param fifty  - the quantity of 50cs
 	 * @param one    - the quantity of €1s
-	 * @param two - the quantity of €2s
+	 * @param two    - the quantity of €2s
 	 */
 
 	public void setEuroTubes(int ten, int twenty, int fifty, int one, int two) {
@@ -146,25 +169,25 @@ public class VendingMachine {
 	/**
 	 * Adds coins into tubes on top of existing coins
 	 * 
-	 * @param ten     - the quantity of 10ps to add
-	 * @param twenty  - the quantity of 20ps to add
-	 * @param fifty   - the quantity of 50ps to add
+	 * @param ten    - the quantity of 10ps to add
+	 * @param twenty - the quantity of 20ps to add
+	 * @param fifty  - the quantity of 50ps to add
 	 * @param one    - the quantity of ï¿½1s to add
-	 * @param two - the quantity of ï¿½2s to add
+	 * @param two    - the quantity of ï¿½2s to add
 	 */
 
 	public void addTubes(int ten, int twenty, int fifty, int one, int two) {
 		this.cashBox.addTubes(ten, twenty, fifty, one, two);
 	}
-	
+
 	/**
 	 * Adds Euro coins into tubes on top of existing coins
 	 * 
-	 * @param ten     - the quantity of 10cs to add
-	 * @param twenty  - the quantity of 20cs to add
-	 * @param fifty   - the quantity of 50cs to add
+	 * @param ten    - the quantity of 10cs to add
+	 * @param twenty - the quantity of 20cs to add
+	 * @param fifty  - the quantity of 50cs to add
 	 * @param one    - the quantity of €1s to add
-	 * @param two - the quantity of €2s to add
+	 * @param two    - the quantity of €2s to add
 	 */
 
 	public void addEuroTubes(int ten, int twenty, int fifty, int one, int two) {
@@ -225,7 +248,7 @@ public class VendingMachine {
 		} catch (IOException e) {
 			System.out.println("Error writing cashbox data to file.");
 		}
-		
+
 		try {
 			myDir = "EURcashbox.csv";
 			myPw = new PrintWriter(myDir);
@@ -257,7 +280,7 @@ public class VendingMachine {
 			myDir = "items.csv";
 			myPw = new PrintWriter(myDir);
 			myPw.flush();
-			myPw.println("Items in stock\nLocation,Name,Cost,Quantity");
+			myPw.println("Items in stock\nLocation,Name,Type,Cost,Quantity,Sale Count");
 			myPw.flush();
 			for (int row = 0; row < 5; row++) {
 				for (int column = 0; column < 5; column++) {
@@ -280,7 +303,8 @@ public class VendingMachine {
 						break;
 					}
 					myPw.println(rowStr + (column + 1) + "," + item[row][column].getProductName() + ","
-							+ item[row][column].getPrice() + "," + item[row][column].getQuantity());
+							+ item[row][column].getProductType() + "," + item[row][column].getPrice() + ","
+							+ item[row][column].getQuantity() + "," + item[row][column].getSaleCount());
 					myPw.flush();
 				}
 			}
@@ -337,7 +361,7 @@ public class VendingMachine {
 			System.out.println("Error occurred when loading cashbox data.\n");
 			this.cashBox.setCashBoxAmount(0.00);
 		}
-		
+
 		try {
 			myFile = new File("EURcashbox.csv");
 			myScanner = new Scanner(myFile);
@@ -388,9 +412,33 @@ public class VendingMachine {
 				for (int row = 0; row < 5; row++) {
 					for (int column = 0; column < 5; column++) {
 						String[] itemStr = myScanner.nextLine().split(",");
+
 						String name = itemStr[1];
 						setItemName(row, column, name);
-						double cost = Double.parseDouble(itemStr[2]);
+
+						String type = itemStr[2];
+						// changes the string value of type into a enum.
+						ProductType itemType = null;
+						switch (type) {
+						case "Food":
+							itemType = ProductType.FOOD;
+							break;
+						case "Drink":
+							itemType = ProductType.DRINK;
+							break;
+						case "Accessory":
+							itemType = ProductType.ACCESSORY;
+							break;
+						case "Clothing":
+							itemType = ProductType.CLOTHING;
+							break;
+						default:
+							itemType = ProductType.OTHER;
+							break;
+						}
+						setItemType(row, column, itemType);
+
+						double cost = Double.parseDouble(itemStr[3]);
 						if (Math.round(cost * 100) % 10 == 0 && cost >= 0) {
 							setItemCost(row, column, cost);
 						} else {
@@ -398,13 +446,18 @@ public class VendingMachine {
 							System.out.println("Error occurred when loading data for item (" + (row + 1) + ", "
 									+ (column + 1) + ").\n");
 						}
-						int quantity = Integer.parseInt(itemStr[3]);
+
+						int quantity = Integer.parseInt(itemStr[4]);
 						if (quantity >= 0 && quantity <= 20) {
 							setItemQuantity(row, column, quantity);
 						} else {
 							System.out.println("Error occurred when loading data for item (" + (row + 1) + ", "
 									+ (column + 1) + ").\n");
 						}
+
+						int saleCount = Integer.parseInt(itemStr[5]);
+						setItemSaleCount(row, column, saleCount);
+
 					}
 				}
 			} catch (Exception e) {
@@ -476,13 +529,13 @@ public class VendingMachine {
 
 	public double addCredit(double coin) {
 
-			if (coin == 0.10 || coin == 0.20 || coin == 0.50 || coin == 1.0 || coin == 2.0) {
-				this.credit += coin;
-				this.cashBox.enterCoin(coin);
-				return this.credit;
-			} else {
-				return 0;
-			}
+		if (coin == 0.10 || coin == 0.20 || coin == 0.50 || coin == 1.0 || coin == 2.0) {
+			this.credit += coin;
+			this.cashBox.enterCoin(coin);
+			return this.credit;
+		} else {
+			return 0;
+		}
 	}
 
 	/**
@@ -546,20 +599,30 @@ public class VendingMachine {
 		return usbPort.readContents(usbPort.getDeviceName(), fileName);
 
 	}
-	
+
 	/**
-	 * returns a single String containing the product name, product type, product price, quantity and sale count for
-	 * the items objects within the system (ordered by sale count,
-	 * highest to lowest)
+	 * returns a single String containing the product name, product type, product
+	 * price, quantity and sale count for the items objects within the system
+	 * (ordered by sale count, highest to lowest)
+	 * 
 	 * @return
 	 */
+	/*
+	 * public String highestSaleCounts() { if(item.length > 0) { GenericProducts
+	 * data[] = new GenericProducts[item.length]; int index = 0; for
+	 * (GenericProducts[] items : item) { data[index] = items[index]; index++; }
+	 * sortSaleCount(data); displaySaleCount(data); } return null; }
+	 */
+
 	public String highestSaleCounts() {
-		if(item.length > 0) {
-			GenericProducts data[] = new GenericProducts[item.length];
+		if (item.length > 0) {
+			GenericProducts[] data = new GenericProducts[26];
+			// String data = "";
 			int index = 0;
-			for (GenericProducts[] items : item) {
-				data[index] = items[index];
-				index++;
+			for (int row = 0; row < 5; row++) {
+				for (int column = 0; column < 5; column++) {
+					data[index++] = item[row][column];
+				}
 			}
 			sortSaleCount(data);
 			displaySaleCount(data);
@@ -575,7 +638,7 @@ public class VendingMachine {
 		int swaps;
 		do {
 			swaps = 0;
-			for (int index = 0; index < items.length - 1; index++) {
+			for (int index = 0; index < 24; index++) {
 				if (items[index].getSaleCount() < items[index + 1].getSaleCount()) {
 					GenericProducts temp = items[index];
 					items[index] = items[index + 1];
@@ -586,21 +649,34 @@ public class VendingMachine {
 		} while (swaps > 0);
 	}
 
+	/*
+	 * private void sortSaleCount(GenericProducts items[]) { int swaps; int index =
+	 * 0; do { GenericProducts[] data = new GenericProducts[item.length]; swaps = 0;
+	 * for(int row = 0; row < 5; row++) { for(int column = 0; column < 5; column++)
+	 * { data[index++] = item[row][column]; } }
+	 * 
+	 * for(int i = 0; i < items.length -1; i++) { if(data[i].getSaleCount() < data[i
+	 * + 1].getSaleCount()) { GenericProducts temp = data[i]; data[i] = data[i + 1];
+	 * data[i + 1] = temp; swaps++; } } }while (swaps > 0); }
+	 */
+
 	/**
 	 * 
 	 * @param items
 	 * @return
 	 */
-	private static String displaySaleCount(GenericProducts items[]) {
+	private static void displaySaleCount(GenericProducts items[]) {
 		if (items != null && items.length > 0) {
-			for (int index = 0; index < items.length;) {
-				return "Product Name: " + items[index++].getProductName() + " Product Type: " + items[index++].getProductType() 
-						+ " Price: " + items[index++].getPrice() + " Quantity: " + items[index++].getQuantity() + " Sales: " + items[index++].getSaleCount();
+			for (int index = 0; index < 25; index++) {
+				System.out.println("Product Name: " + items[index].getProductName() + " Product Type: "
+						+ items[index].getProductType() + " Price: " + items[index].getPrice() + " Quantity: "
+						+ items[index].getQuantity() + " Sales: " + items[index].getSaleCount());
 			}
+		} else {
+			System.out.println("No data to display.");
 		}
-		return "No data to display.";
 	}
-	
+
 	private GenericProducts searchProduct(String productName) {
 		int index = 0;
 		for (GenericProducts products[] : item) {
@@ -609,30 +685,29 @@ public class VendingMachine {
 				return products[index];
 			}
 		}
-	
-	return null;
-}
 
-private String[] getProductInfo(String productName) {
-	if(item.length > 0) {
-		String data[] = new String[item.length];
-		int index1 = 0;
-		int index2 = 0;
-		GenericProducts product = searchProduct(productName);
-		if(product != null) {
-			for (GenericProducts products[] : item) {
-				String item = products[index1++].getProductName();
-				if(productName.equals(item)) {
-					data[index2++] = products[index1].toString();
-				}
-			}
-			return data;
-		}
-		else {
-			return null;
-		}
+		return null;
 	}
-	return null;
-}
+
+	private String[] getProductInfo(String productName) {
+		if (item.length > 0) {
+			String data[] = new String[item.length];
+			int index1 = 0;
+			int index2 = 0;
+			GenericProducts product = searchProduct(productName);
+			if (product != null) {
+				for (GenericProducts products[] : item) {
+					String item = products[index1++].getProductName();
+					if (productName.equals(item)) {
+						data[index2++] = products[index1].toString();
+					}
+				}
+				return data;
+			} else {
+				return null;
+			}
+		}
+		return null;
+	}
 
 }
