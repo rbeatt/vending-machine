@@ -17,7 +17,8 @@ public class OwnerApp {
 		// Array of menu options
 
 		String[] options = { "Restock machine", "Top up tubes", "View total in cashbox and tubes", "Set prices",
-				"Reset cashbox", "Perform a software update", "Change item name","Show popular items" , "Exit Owner Mode" };
+				"Reset cashbox", "Perform a software update", "Change item name", "Show popular items", "Search Product",
+				"Exit Owner Mode" };
 		Menu vendingMenu = new Menu("\nOwner Mode", options);
 
 		boolean finished = false;
@@ -49,6 +50,9 @@ public class OwnerApp {
 				showPopularItems();
 				break;
 			case 9:
+				searchProduct();
+				break;
+			case 10:
 				finished = true;
 				break;
 			default:
@@ -57,14 +61,14 @@ public class OwnerApp {
 			}
 		} while (!finished); // Loop finishes when boolean value is true
 	}
-	
+
 	private static CashBox getCurrency() {
 		boolean finished = false;
 		String[] currencies = { "GBP", "EUR" };
 		Menu currencyMenu = new Menu("\nPlease select which cash box you would like to interact with: ", currencies);
 		do {
 			int option = currencyMenu.getUserChoice();
-			switch(option) {
+			switch (option) {
 			case 1:
 				finished = true;
 				return machine.getCashBox(currencies[0]);
@@ -76,7 +80,7 @@ public class OwnerApp {
 				break;
 			}
 		} while (!finished);
-		
+
 		return null;
 	}
 
@@ -341,9 +345,43 @@ public class OwnerApp {
 		machine.resetCashbox(cashbox);
 		machine.saveToFile(cashbox);
 	}
-	
+
 	private static void showPopularItems() {
 		machine.highestSaleCounts();
+	}
+
+	private static void searchProduct() {
+		System.out.println("\nSelect an item to see details to (e.g., A1, B3, etc.)");
+		String input = myScanner.nextLine();
+		int row = -1;
+		int column = -1;
+		try {
+			switch (input.toUpperCase().charAt(0)) {
+			case 'A':
+				row = 1;
+				break;
+			case 'B':
+				row = 2;
+				break;
+			case 'C':
+				row = 3;
+				break;
+			case 'D':
+				row = 4;
+				break;
+			case 'E':
+				row = 5;
+				break;
+			default:
+				row = 0;
+				break;
+			}
+			column = Character.getNumericValue(input.charAt(1));
+			
+			System.out.println(machine.searchProduct(row, column));
+		} catch (Exception e) {
+
+		}
 	}
 
 }

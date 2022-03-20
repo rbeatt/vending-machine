@@ -182,7 +182,7 @@ public class GenericProducts implements IProducts{
 	 * 
 	 */
 	public String toString() {
-        String details = this.productName + "," + this.productType + "," +  df.format(this.price) + "," + this.quantity + "," + this.saleCount;
+        String details = "Product Name: " + this.productName + ", Product Type: " + this.productType + ", Price: £" +  df.format(this.price) + ", Quantity: " + this.quantity + ", Total Sales: " + this.saleCount;
         return details;
     }
 }
