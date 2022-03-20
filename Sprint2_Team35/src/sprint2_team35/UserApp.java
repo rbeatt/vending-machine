@@ -158,8 +158,8 @@ public class UserApp {
 	 */
 
 	private static void displayInfo(CashBox cashbox) {
-
-		System.out.println("Please make a selection: ");
+		machine.displayProducts();
+		System.out.println("\nPlease make a selection (A1-E5): ");
 		String selection = input.nextLine();
 		int row = -1;
 		int column = -1;

@@ -609,19 +609,11 @@ public class VendingMachine {
 	 * returns a single String containing the product name, product type, product
 	 * price, quantity and sale count for the items objects within the system
 	 * (ordered by sale count, highest to lowest)
-	 * 
-	 * @return
-	 */
-	/*
-	 * public String highestSaleCounts() { if(item.length > 0) { GenericProducts
-	 * data[] = new GenericProducts[item.length]; int index = 0; for
-	 * (GenericProducts[] items : item) { data[index] = items[index]; index++; }
-	 * sortSaleCount(data); displaySaleCount(data); } return null; }
 	 */
 
 	public String highestSaleCounts() {
 		if (item.length > 0) {
-			GenericProducts[] data = new GenericProducts[26];
+			GenericProducts[] data = new GenericProducts[25];
 			// String data = "";
 			int index = 0;
 			for (int row = 0; row < 5; row++) {
@@ -631,6 +623,20 @@ public class VendingMachine {
 			}
 			sortSaleCount(data);
 			displaySaleCount(data);
+		}
+		return null;
+	}
+	
+	public String displayProducts() {
+		if (item.length > 0) {
+			GenericProducts[] data = new GenericProducts[25];
+			int index = 0;
+			for (int row = 0; row < 5; row++) {
+				for (int column = 0; column < 5; column++) {
+					data[index++] = item[row][column];
+				}
+			}
+			displayProducts(data);
 		}
 		return null;
 	}
@@ -654,17 +660,6 @@ public class VendingMachine {
 		} while (swaps > 0);
 	}
 
-	/*
-	 * private void sortSaleCount(GenericProducts items[]) { int swaps; int index =
-	 * 0; do { GenericProducts[] data = new GenericProducts[item.length]; swaps = 0;
-	 * for(int row = 0; row < 5; row++) { for(int column = 0; column < 5; column++)
-	 * { data[index++] = item[row][column]; } }
-	 * 
-	 * for(int i = 0; i < items.length -1; i++) { if(data[i].getSaleCount() < data[i
-	 * + 1].getSaleCount()) { GenericProducts temp = data[i]; data[i] = data[i + 1];
-	 * data[i + 1] = temp; swaps++; } } }while (swaps > 0); }
-	 */
-
 	/**
 	 * 
 	 * @param items
@@ -673,16 +668,28 @@ public class VendingMachine {
 	private static void displaySaleCount(GenericProducts items[]) {
 		if (items != null && items.length > 0) {
 			for (int index = 0; index < 25; index++) {
-				System.out.println("Product Name: " + items[index].getProductName() + " Product Type: "
-						+ items[index].getProductType() + " Price: " + items[index].getPrice() + " Quantity: "
-						+ items[index].getQuantity() + " Sales: " + items[index].getSaleCount());
+				System.out.println("Product Name: " + items[index].getProductName() + ", Product Type: "
+						+ items[index].getProductType() + ", Price: " + items[index].getPrice() + ", Quantity: "
+						+ items[index].getQuantity() + ", Sales: " + items[index].getSaleCount());
+			}
+		} else {
+			System.out.println("No data to display.");
+		}
+	}
+	
+	private static void displayProducts(GenericProducts items[]) {
+		if (items != null && items.length > 0) {
+			for (int index = 0; index < 25; index++) {
+				System.out.println("Product Name: " + items[index].getProductName() + ", Product Type: "
+						+ items[index].getProductType() + ", Price: " + items[index].getPrice() + ", Quantity: "
+						+ items[index].getQuantity());
 			}
 		} else {
 			System.out.println("No data to display.");
 		}
 	}
 
-	private GenericProducts searchProduct(String productName) {
+	/*private GenericProducts searchProduct(String productName) {
 		int index = 0;
 		for (GenericProducts products[] : item) {
 			String art = products[index++].getProductName();
@@ -692,9 +699,9 @@ public class VendingMachine {
 		}
 
 		return null;
-	}
+	}*/
 
-	private String[] getProductInfo(String productName) {
+	/*private String[] getProductInfo(String productName) {
 		if (item.length > 0) {
 			String data[] = new String[item.length];
 			int index1 = 0;
@@ -711,6 +718,16 @@ public class VendingMachine {
 			} else {
 				return null;
 			}
+		}
+		return null;
+	}*/
+	
+	public String searchProduct(int row, int column) {
+		if(item.length > 0) {
+			GenericProducts data = null;
+			data = item[row][column];
+			String str = data.toString();
+			return str;
 		}
 		return null;
 	}
