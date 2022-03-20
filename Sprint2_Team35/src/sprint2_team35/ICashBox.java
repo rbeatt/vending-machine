@@ -8,6 +8,8 @@ package sprint2_team35;
  */
 
 public interface ICashBox {
+	
+	public String getCashBoxName();
 
 	public double[] getAcceptedCoins();
 

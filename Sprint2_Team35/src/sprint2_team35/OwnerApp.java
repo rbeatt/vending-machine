@@ -1,5 +1,6 @@
 package sprint2_team35;
 
+import java.text.DecimalFormat;
 import java.util.Scanner;
 
 public class OwnerApp {
@@ -8,6 +9,8 @@ public class OwnerApp {
 
 	// Declaring and initialising vending machine object
 	private static VendingMachine machine = new VendingMachine();
+	
+	private static final DecimalFormat df = new DecimalFormat("0.00");
 
 	public static void main(String[] args) {
 
@@ -127,35 +130,25 @@ public class OwnerApp {
 	 */
 
 	private static void topUpTubes(CashBox cashbox) {
-		// Adding 10s
-		System.out.println("How many 10s would you like to add?");
-		String Add10s = myScanner.nextLine(); // Read user input
-		System.out.println("Added: " + Add10s); // Output user input
-
-		// Adding 20s
-		System.out.println("How many 20s would you like to add?");
-		String Add20s = myScanner.nextLine(); // Read user input
-		System.out.println("Added: " + Add20s); // Output user input
-
-		// Adding 50s
-		System.out.println("How many 50s would you like to add?");
-		String Add50s = myScanner.nextLine(); // Read user input
-		System.out.println("Added: " + Add50s); // Output user input
-
-		// Adding Pounds
-
-		System.out.println("How many £1s would you like to add?");
-		String Add1s = myScanner.nextLine(); // Read user input
-		System.out.println("Added: " + Add1s); // Output user input
-
-		// Adding £2s
-		System.out.println("How many £2s would you like to add?");
-		String Add2s = myScanner.nextLine(); // Read user input
-		System.out.println("Added: " + Add2s); // Output user input
+		int add = 0;
+		int[] data = new int[cashbox.getAcceptedCoins().length];
+		for (int i = 0; i < cashbox.getAcceptedCoins().length; i++) {
+			System.out.println("How many " + cashbox.getCashBoxSymbols()[0]
+					+ df.format(cashbox.getAcceptedCoins()[i]) + " would you like to add?: ");
+			try {
+			add = myScanner.nextInt();
+			myScanner.nextLine();
+			}
+			catch(Exception e) {
+				System.out.println("Invalid coin amount.");
+				add = 0;
+			}
+			
+			data[i] = add;
+		}
 
 		try {
-			machine.addTubes(cashbox, Integer.parseInt(Add10s), Integer.parseInt(Add20s), Integer.parseInt(Add50s),
-					Integer.parseInt(Add1s), Integer.parseInt(Add2s));
+			machine.addTubes(cashbox, data);
 			System.out.println("Coins added successfully.");
 		} catch (Exception e) {
 			System.out.println("An invalid amount was added.");
@@ -191,7 +184,7 @@ public class OwnerApp {
 				column = item[1];
 				do {
 					try {
-						System.out.println("\nEnter a new price: ");
+						System.out.println("\nEnter a new price £: ");
 						cost = myScanner.nextDouble();
 						myScanner.nextLine();
 						if (cost >= 0 && (cost * 100) % 10 == 0) {

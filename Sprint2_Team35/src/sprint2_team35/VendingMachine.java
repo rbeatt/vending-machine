@@ -168,24 +168,6 @@ public class VendingMachine {
 	}
 
 	/**
-	 * Set method for the quantity of Euro coins in tubes.
-	 * 
-	 * @param ten    - the quantity of 10cs
-	 * @param twenty - the quantity of 20cs
-	 * @param fifty  - the quantity of 50cs
-	 * @param one    - the quantity of �1s
-	 * @param two    - the quantity of �2s
-	 */
-
-	public void setEuroTubes(CashBox cashbox, int ten, int twenty, int fifty, int one, int two) {
-		cashbox.setTotal10s(ten);
-		cashbox.setTotal20s(twenty);
-		cashbox.setTotal50s(fifty);
-		cashbox.setTotal1s(one);
-		cashbox.setTotal2s(two);
-	}
-
-	/**
 	 * Adds coins into tubes on top of existing coins
 	 * 
 	 * @param ten    - the quantity of 10ps to add
@@ -195,23 +177,10 @@ public class VendingMachine {
 	 * @param two    - the quantity of �2s to add
 	 */
 
-	public void addTubes(CashBox cashbox, int ten, int twenty, int fifty, int one, int two) {
-		cashbox.addTubes(ten, twenty, fifty, one, two);
+	public void addTubes(CashBox cashbox, int[] array) {
+		cashbox.addTubes(array);
 	}
 
-	/**
-	 * Adds Euro coins into tubes on top of existing coins
-	 * 
-	 * @param ten    - the quantity of 10cs to add
-	 * @param twenty - the quantity of 20cs to add
-	 * @param fifty  - the quantity of 50cs to add
-	 * @param one    - the quantity of �1s to add
-	 * @param two    - the quantity of �2s to add
-	 */
-
-	public void addEuroTubes(int ten, int twenty, int fifty, int one, int two) {
-		this.eurCashBox.addTubes(ten, twenty, fifty, one, two);
-	}
 
 	/**
 	 * Set method for the credit input by a customer.
@@ -239,23 +208,17 @@ public class VendingMachine {
 	public void saveToFile(CashBox cashbox) {	
 		String myDir = null;
 		PrintWriter myPw = null;
-		String currencySymbol = null;
-		String altSymbol = null;
+		String currencySymbol = cashbox.getCashBoxSymbols()[0];
+		String altSymbol = cashbox.getCashBoxSymbols()[1];
 		
 		if (cashbox == this.eurCashBox) {
 			myDir = "EURcashbox.csv";
-			currencySymbol = "€";
-			altSymbol = "c";
 		}
 		else if (cashbox == this.cashBox) {
 			myDir = "cashbox.csv";
-			currencySymbol = "£";
-			altSymbol = "p";
 		}
 		else {
 			myDir = "cashbox.csv";
-			currencySymbol = "£";
-			altSymbol = "p";
 		}
 
 		// Writing cashbox data
@@ -481,22 +444,24 @@ public class VendingMachine {
 	 */
 
 	public String giveChange(CashBox cashbox, double moneyPaid, double actualCost) {
+		String currencySymbol = cashbox.getCashBoxSymbols()[0];
+		String altSymbol = cashbox.getCashBoxSymbols()[1];
 		int[] change = cashbox.giveChange(moneyPaid, actualCost);
 		String changeStr = "Change given: ";
 		if (change[4] > 0) {
-			changeStr += change[4] + " �2 coin(s), ";
+			changeStr += change[4] + " " + currencySymbol + "2 coin(s), ";
 		}
 		if (change[3] > 0) {
-			changeStr += change[3] + " �1 coin(s), ";
+			changeStr += change[3] + " " + currencySymbol + "1 coin(s), ";
 		}
 		if (change[2] > 0) {
-			changeStr += change[2] + " 50p coin(s), ";
+			changeStr += change[2] + " 50" + altSymbol + " coin(s), ";
 		}
 		if (change[1] > 0) {
-			changeStr += change[1] + " 20p coin(s), ";
+			changeStr += change[1] + " 20" + altSymbol + " coin(s), ";
 		}
 		if (change[0] > 0) {
-			changeStr += change[0] + " 10p coin(s), ";
+			changeStr += change[0] + " 10" + altSymbol + " coin(s), ";
 		}
 		if (changeStr.length() > 15) {
 			changeStr = changeStr.substring(0, changeStr.length() - 2);
