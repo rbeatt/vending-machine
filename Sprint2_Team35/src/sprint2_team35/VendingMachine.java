@@ -592,6 +592,10 @@ public class VendingMachine {
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public String displayProducts() {
 		if (item.length > 0) {
 			GenericProducts[] data = new GenericProducts[25];
@@ -642,6 +646,10 @@ public class VendingMachine {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param items
+	 */
 	private static void displayProducts(GenericProducts items[]) {
 		if (items != null && items.length > 0) {
 			for (int index = 0; index < 25; index++) {
