@@ -6,8 +6,25 @@ public class EuroCashBox extends CashBox implements ICashBox {
 	
 	private static final DecimalFormat df = new DecimalFormat("0.00");	
 	
+	private double rate = 1.19;
+	
+	private double[] acceptedCoins = {0.10, 0.20, 0.50, 1.00, 2.00};
+	
 	public EuroCashBox() {
 		super();
+	}
+	
+	public double[] getAcceptedCoins() {
+		return this.acceptedCoins;
+	}
+	
+	public double getRate() {
+		return this.rate;
+	}
+	
+	public void setRate(double rate) {
+		this.rate = rate;
+		
 	}
 	
 	@Override

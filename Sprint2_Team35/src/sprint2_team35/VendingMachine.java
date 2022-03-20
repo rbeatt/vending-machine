@@ -26,8 +26,15 @@ public class VendingMachine {
 	 */
 
 	public VendingMachine() {
-		loadFromFile();
+		loadFromFile(this.cashBox);
+		loadFromFile(this.eurCashBox);
 	}
+	
+	public double getRate(CashBox cashbox) {
+		return cashbox.getRate();
+	}
+	
+	
 
 	/**
 	 * Get method for an item in the machine.
@@ -229,23 +236,31 @@ public class VendingMachine {
 	 * files.
 	 */
 
-	public void saveToFile(CashBox cashbox) {
-		String path;
+	public void saveToFile(CashBox cashbox) {	
+		String myDir = null;
+		PrintWriter myPw = null;
+		String currencySymbol = null;
+		String altSymbol = null;
 		
 		if (cashbox == this.eurCashBox) {
-			path = "EURcashbox.csv";
+			myDir = "EURcashbox.csv";
+			currencySymbol = "€";
+			altSymbol = "c";
 		}
 		else if (cashbox == this.cashBox) {
-			path = "cashbox.csv";
+			myDir = "cashbox.csv";
+			currencySymbol = "£";
+			altSymbol = "p";
 		}
-		
-		String myDir;
-		PrintWriter myPw = null;
+		else {
+			myDir = "cashbox.csv";
+			currencySymbol = "£";
+			altSymbol = "p";
+		}
 
 		// Writing cashbox data
 
 		try {
-			myDir = "cashbox.csv";
 			myPw = new PrintWriter(myDir);
 			myPw.flush();
 			myPw.println("Total money in cashbox");
@@ -254,44 +269,19 @@ public class VendingMachine {
 			myPw.flush();
 			myPw.println("Coins in tubes\nValue,Quantity");
 			myPw.flush();
-			myPw.println("10p," + this.cashBox.getTotal10s());
+			myPw.println("10" + altSymbol + " ," + cashbox.getTotal10s());
 			myPw.flush();
-			myPw.println("20p," + this.cashBox.getTotal20s());
+			myPw.println("20" + altSymbol + " ," + cashbox.getTotal20s());
 			myPw.flush();
-			myPw.println("50p," + this.cashBox.getTotal50s());
+			myPw.println("50" + altSymbol + " ," + cashbox.getTotal50s());
 			myPw.flush();
-			myPw.println("£1," + this.cashBox.getTotal1s());
+			myPw.println(currencySymbol + "1" + " ," + cashbox.getTotal1s());
 			myPw.flush();
-			myPw.println("£2," + this.cashBox.getTotal2s());
+			myPw.println(currencySymbol + "2" + " ," + cashbox.getTotal2s());
 			myPw.flush();
 			System.out.println("Cashbox data written successfully.");
 		} catch (IOException e) {
 			System.out.println("Error writing cashbox data to file.");
-		}
-
-		try {
-			myDir = "EURcashbox.csv";
-			myPw = new PrintWriter(myDir);
-			myPw.flush();
-			myPw.println("Total money in cashbox");
-			myPw.flush();
-			myPw.println(this.eurCashBox.getCashBoxAmount());
-			myPw.flush();
-			myPw.println("Coins in tubes\nValue,Quantity");
-			myPw.flush();
-			myPw.println("10c," + this.eurCashBox.getTotal10s());
-			myPw.flush();
-			myPw.println("20c," + this.eurCashBox.getTotal20s());
-			myPw.flush();
-			myPw.println("50c," + this.eurCashBox.getTotal50s());
-			myPw.flush();
-			myPw.println("�1," + this.eurCashBox.getTotal1s());
-			myPw.flush();
-			myPw.println("�2," + this.eurCashBox.getTotal2s());
-			myPw.flush();
-			System.out.println("Euro cashbox data written successfully.");
-		} catch (IOException e) {
-			System.out.println("Error writing Euro cashbox data to file.");
 		}
 
 		// Writing item data
@@ -342,77 +332,56 @@ public class VendingMachine {
 	 * machine from text files.
 	 */
 
-	public void loadFromFile() {
+	public void loadFromFile(CashBox cashbox) {
 
 		File myFile;
 		Scanner myScanner = null;
+		String myDir = null;
+		
+		if (cashbox == this.eurCashBox) {
+			myDir = "EURcashbox.csv";
+		}
+		else if (cashbox == this.cashBox) {
+			myDir = "cashbox.csv";
+		}
+		else {
+			myDir = "cashbox.csv";
+		}
 
 		// Loading cashbox data
 
 		try {
-			myFile = new File("cashbox.csv");
+			myFile = new File(myDir);
 			myScanner = new Scanner(myFile);
 			try {
 				myScanner.nextLine();
 				double total = myScanner.nextDouble();
-				this.eurCashBox.setCashBoxAmount(total);
-				if (this.eurCashBox.getCashBoxAmount() < 0) {
-					this.eurCashBox.setCashBoxAmount(0.00);
+				cashbox.setCashBoxAmount(total);
+				if (cashbox.getCashBoxAmount() < 0) {
+					cashbox.setCashBoxAmount(0.00);
 				}
 				myScanner.nextLine();
 				myScanner.nextLine();
 				myScanner.nextLine();
 				String[] cashboxStr = myScanner.nextLine().split(",");
-				int tenc = Integer.parseInt(cashboxStr[1]);
+				int ten = Integer.parseInt(cashboxStr[1]);
 				cashboxStr = myScanner.nextLine().split(",");
-				int twentyc = Integer.parseInt(cashboxStr[1]);
+				int twenty = Integer.parseInt(cashboxStr[1]);
 				cashboxStr = myScanner.nextLine().split(",");
-				int fiftyc = Integer.parseInt(cashboxStr[1]);
+				int fifty = Integer.parseInt(cashboxStr[1]);
 				cashboxStr = myScanner.nextLine().split(",");
-				int euro = Integer.parseInt(cashboxStr[1]);
+				int one = Integer.parseInt(cashboxStr[1]);
 				cashboxStr = myScanner.nextLine().split(",");
-				int twoeuro = Integer.parseInt(cashboxStr[1]);
-				setTubes(eurCashBox,tenc, twentyc, fiftyc, euro, twoeuro);
+				int two = Integer.parseInt(cashboxStr[1]);
+				setTubes(cashbox,ten, twenty, fifty, one, two);
 			} catch (Exception e) {
 				System.out.println("Error occurred when loading cashbox data.\n");
-				this.cashBox.setCashBoxAmount(0.00);
+				cashbox.setCashBoxAmount(0.00);
+				e.printStackTrace();
 			}
 		} catch (FileNotFoundException e) {
-			System.out.println("Error occurred when loading cashbox data.\n");
-			this.cashBox.setCashBoxAmount(0.00);
-		}
-
-		try {
-			myFile = new File("EURcashbox.csv");
-			myScanner = new Scanner(myFile);
-			try {
-				myScanner.nextLine();
-				double total = myScanner.nextDouble();
-				this.eurCashBox.setCashBoxAmount(total);
-				if (this.eurCashBox.getCashBoxAmount() < 0) {
-					this.eurCashBox.setCashBoxAmount(0.00);
-				}
-				myScanner.nextLine();
-				myScanner.nextLine();
-				myScanner.nextLine();
-				String[] cashboxStr = myScanner.nextLine().split(",");
-				int tenc = Integer.parseInt(cashboxStr[1]);
-				cashboxStr = myScanner.nextLine().split(",");
-				int twentyc = Integer.parseInt(cashboxStr[1]);
-				cashboxStr = myScanner.nextLine().split(",");
-				int fiftyc = Integer.parseInt(cashboxStr[1]);
-				cashboxStr = myScanner.nextLine().split(",");
-				int euro = Integer.parseInt(cashboxStr[1]);
-				cashboxStr = myScanner.nextLine().split(",");
-				int twoeuro = Integer.parseInt(cashboxStr[1]);
-				setTubes(eurCashBox, tenc, twentyc, fiftyc, euro, twoeuro);
-			} catch (Exception e) {
-				System.out.println("Error occurred when loading Euro cashbox data.\n");
-				this.eurCashBox.setCashBoxAmount(0.00);
-			}
-		} catch (FileNotFoundException e) {
-			System.out.println("Error occurred when loading Euro cashbox data.\n");
-			this.eurCashBox.setCashBoxAmount(0.00);
+			System.out.println("Error occurred when loading cashbox data. File not found.\n");
+			cashbox.setCashBoxAmount(0.00);
 		}
 
 		// Loading item data
@@ -511,8 +480,8 @@ public class VendingMachine {
 	 * deducts from the coin holders appropriately.
 	 */
 
-	public String giveChange(double moneyPaid, double actualCost) {
-		int[] change = cashBox.giveChange(moneyPaid, actualCost);
+	public String giveChange(CashBox cashbox, double moneyPaid, double actualCost) {
+		int[] change = cashbox.giveChange(moneyPaid, actualCost);
 		String changeStr = "Change given: ";
 		if (change[4] > 0) {
 			changeStr += change[4] + " �2 coin(s), ";
@@ -535,7 +504,7 @@ public class VendingMachine {
 			changeStr += "None";
 		}
 		this.credit = 0.0; // Sets credit to 0
-		saveToFile();
+		saveToFile(cashbox);
 		return changeStr + ".\n";
 	}
 
@@ -547,14 +516,30 @@ public class VendingMachine {
 	 * @return - the total credit
 	 */
 
-	public double addCredit(double coin) {
+	public double addCredit(CashBox cashbox, double coin) {
+		double[] acceptedCoins = cashbox.getAcceptedCoins();
+		boolean isAccepted = false;
 
-		if (coin == 0.10 || coin == 0.20 || coin == 0.50 || coin == 1.0 || coin == 2.0) {
-			this.credit += coin;
+		for (int i = 0; i < acceptedCoins.length; i++) {
+			if (acceptedCoins[i] == coin) {
+				isAccepted = true;
+			}
+		}
+
+		if (isAccepted) {
+
+			if (cashbox != cashBox) {
+				double conversion = (coin / cashbox.getRate());
+				double rounded = Math.round(conversion * 10.0) / 10.0;
+				this.credit += rounded;
+			} else {
+				this.credit += coin;
+			}
+
 			this.cashBox.enterCoin(coin);
 			return this.credit;
 		} else {
-			return 0;
+			return 0.00;
 		}
 	}
 

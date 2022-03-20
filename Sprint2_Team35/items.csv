@@ -1,10 +1,10 @@
 Items in stock
 Location,Name,Type,Cost,Quantity,Sale Count
-A1,A1item,Other,2.1,17,5
+A1,A1item,Other,2.1,16,6
 A2,itemA2,Other,0.7,20,2
-A3,itemA3,Other,0.8,20,1
+A3,itemA3,Other,0.8,19,2
 A4,itemA4,Other,0.0,20,9
-A5,a5,Other,1.6,6,6
+A5,a5,Other,1.6,5,7
 B1,itemB1,Other,1.6,12,0
 B2,A1 Item,Other,2.1,9,0
 B3,itemB3,Other,1.4,0,0

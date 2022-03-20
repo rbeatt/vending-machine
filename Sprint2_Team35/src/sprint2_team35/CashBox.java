@@ -11,10 +11,20 @@ public class CashBox implements ICashBox {
 	private int total2s;
 	private double cashBoxAmount;
 	private static final DecimalFormat df = new DecimalFormat("0.00");
+	private double rate = 0.00;
+	double[] acceptedCoins = {0.10, 0.20, 0.50, 1.00, 2.00};
 
 	public CashBox() {
 	}
+	
+	public double[] getAcceptedCoins() {
+		return this.acceptedCoins;
+	}
 
+	public double getRate() {
+		return this.rate;
+	}
+	
 	public int getTotal10s() {
 		return this.total10s;
 	}
@@ -37,6 +47,10 @@ public class CashBox implements ICashBox {
 
 	public double getCashBoxAmount() {
 		return this.cashBoxAmount;
+	}
+	
+	public void setRate(double rate) {
+		this.rate = rate;
 	}
 	
 	public void setTotal10s(int total10s) {
@@ -223,5 +237,6 @@ public class CashBox implements ICashBox {
 		desc += "\n£2: " + getTotal2s();
 		return desc;
 	}
+
 			
 }			

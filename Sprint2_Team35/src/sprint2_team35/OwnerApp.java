@@ -105,7 +105,7 @@ public class OwnerApp {
 							System.out.println("Item restocked!\n");
 							finished = true;
 							amountSet = true;
-							machine.saveToFile();
+							machine.saveToFile(null);
 						} else {
 							System.out.println("Please input a non-negative integer.");
 						}
@@ -160,7 +160,7 @@ public class OwnerApp {
 		} catch (Exception e) {
 			System.out.println("An invalid amount was added.");
 		}
-		machine.saveToFile();
+		machine.saveToFile(cashbox);
 	}
 
 	/**
@@ -199,7 +199,7 @@ public class OwnerApp {
 							System.out.println("\nCost set");
 							finished = true;
 							priceSet = true;
-							machine.saveToFile();
+							machine.saveToFile(null);
 						} else {
 							System.out.println("\nPlease input a valid double value.");
 						}
@@ -320,7 +320,7 @@ public class OwnerApp {
 								System.out.println("\nName set!");
 								finished = true;
 								nameSet = true;
-								machine.saveToFile();
+								machine.saveToFile(null);
 							} else {
 								System.out.println("\nName not set! No user input was detected.");
 								finished = false;
@@ -346,7 +346,7 @@ public class OwnerApp {
 	private static void resetCashbox(CashBox cashbox) {
 		System.out.println("\nCashbox reset!");
 		machine.resetCashbox(cashbox);
-		machine.saveToFile();
+		machine.saveToFile(cashbox);
 	}
 	
 	private static void showPopularItems() {

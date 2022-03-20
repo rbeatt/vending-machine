@@ -15,6 +15,28 @@ public class UserApp {
 		verifyIdentity(); // Initial state
 	}
 	
+	private static CashBox getCurrency() {
+		boolean finished = false;
+		String[] currencies = { "GBP", "EUR" };
+		Menu currencyMenu = new Menu("\nPlease select which cash box you would like to interact with: ", currencies);
+		do {
+			int option = currencyMenu.getUserChoice();
+			switch(option) {
+			case 1:
+				finished = true;
+				return machine.getCashBox(currencies[0]);
+			case 2:
+				finished = true;
+				return machine.getCashBox(currencies[1]);
+			default:
+				System.out.println("\nInvalid selection");
+				break;
+			}
+		} while (!finished);
+		
+		return null;
+	}
+	
 	/**
 	 * This method lets a user verify their identity using either login details or simulated facial recognition.
 	 */
@@ -60,7 +82,7 @@ public class UserApp {
 		
 		if (inputUsername.matches("name") && inputPassword.matches("12345")) {
 			System.out.println("Login successful!\n");
-			addCredit();
+			addCredit(getCurrency());
 		}
 		else {
 			System.out.println("Sorry, username or password is incorrect. Please try again.\n");
@@ -80,7 +102,7 @@ public class UserApp {
 		Random rand = new Random();
 		if (rand.nextInt(2) == 1) {
 			System.out.println("Face recognised! You are now logged in.\n");
-			addCredit();
+			addCredit(getCurrency());
 		}
 		else {
 			System.out.println("Sorry, face not recognised. Please try again.\n");
@@ -88,15 +110,17 @@ public class UserApp {
 		}
 		
 	}
+
 	
 	/**
 	 * This method receives input from the user to pass as a parameter for
 	 * setCredit() in the VendingMachine class.
 	 */
 
-	private static void addCredit() {
-		
+	private static void addCredit(CashBox cashbox) {
+		String acceptedCoinsString = "";
 		boolean finished = false;
+		double[] acceptedCoins = cashbox.getAcceptedCoins();
 
 		do {
 			try {
@@ -107,13 +131,17 @@ public class UserApp {
 
 				} else {
 					double value = Double.parseDouble(coin); // Converts input to a double value
-					if (machine.addCredit(value) != 0) { // Passes as parameter to addCredit() in VendingMachine
-						System.out.println("Credit: £" + df.format(machine.getCredit())); // Displays credit
+					if (machine.addCredit(cashbox, value) != 0) { // Passes as parameter to addCredit() in VendingMachine
+						System.out.println("Credit in GBP: " + df.format(machine.getCredit())); // Displays credit
 						finished = false;
 					}
 					else {
-						System.out.println("Machine only accepts 10p, 20p, 50p, £1 and £2 coins");
-						addCredit();
+						acceptedCoinsString += "\nMachine only accepts: ";
+						for (int i = 0; i < acceptedCoins.length; i++) {
+							acceptedCoinsString += df.format(acceptedCoins[i]) + ", ";
+						}
+						System.out.println(acceptedCoinsString);
+						addCredit(cashbox);
 					}
 				}
 			} catch (Exception e) { // Catches exceptions
@@ -121,7 +149,7 @@ public class UserApp {
 			}
 		} while (!finished);
 
-		displayInfo();
+		displayInfo(cashbox);
 
 	}
 	
@@ -129,7 +157,7 @@ public class UserApp {
 	 * This method requests input from a user and calls toString() of the selected product.
 	 */
 
-	private static void displayInfo() {
+	private static void displayInfo(CashBox cashbox) {
 
 		System.out.println("Please make a selection: ");
 		String selection = input.nextLine();
@@ -163,19 +191,19 @@ public class UserApp {
 
 			if (row >= 1 && row <= 5 && column >= 1 && column <= 5) {
 				System.out.println(machine.getItem(row - 1, column - 1));
-				purchaseProduct(row - 1, column - 1); // Calls purchaseProduct() with the selected product
+				purchaseProduct(cashbox, row - 1, column - 1); // Calls purchaseProduct() with the selected product
 			} else {
 				System.out.println("Invalid selection.");
-				displayInfo();
+				displayInfo(cashbox);
 			}
 		} catch (Exception e) {
 			System.out.println("Invalid selection.");
-			displayInfo(); 
+			displayInfo(cashbox); 
 		}
 		
 		}
 		else {
-			completePurchase(machine.getCredit(), 0.0);
+			completePurchase(cashbox, machine.getCredit(), 0.0);
 		}
 
 	}
@@ -186,7 +214,7 @@ public class UserApp {
 	 * @param column - the column number of selected product
 	 */
 
-	private static void purchaseProduct(int row, int column) {
+	private static void purchaseProduct(CashBox cashbox, int row, int column) {
 		double moneyPaid = machine.getCredit(); // Assigns the credit to a variable to be used to calculate change
 		double actualCost = 0.0; // Cost of products purchased
 
@@ -203,26 +231,26 @@ public class UserApp {
 						actualCost += machine.getCost(row, column);
 						finished = true;
 						System.out.println("Purchase successful! Product being dispensed...");
-						machine.saveToFile();
+						machine.saveToFile(cashbox);
 						if (machine.getCredit() > 0) {
 							System.out.println("Credit remaining: " + df.format(machine.getCredit()));
-							completePurchase(moneyPaid, actualCost);
+							completePurchase(cashbox, moneyPaid, actualCost);
 						} else {
-							addCredit();
+							addCredit(getCurrency());
 						}
 					}
 					else if(machine.purchaseProduct(row, column) == 2) {
 						System.out.println("\nInsufficient credit. Please insert more coins or cancel transaction.");
-						addCredit();
+						addCredit(getCurrency());
 					}
 					else {
 						System.out.println("\nItem is out of stock :( ");
-						completePurchase(moneyPaid, actualCost);
+						completePurchase(cashbox, moneyPaid, actualCost);
 					}
 				case 2: // No
 					finished = true;
-					completePurchase(moneyPaid, 0.0);
-					addCredit();
+					completePurchase(cashbox, moneyPaid, 0.0);
+					addCredit(getCurrency());
 				default:
 					System.out.println("\nNot a valid option.");
 					break;
@@ -242,7 +270,7 @@ public class UserApp {
 	 * @param actualCost - cost of the product
 	 */
 
-	private static void completePurchase(double moneyPaid, double actualCost) {
+	private static void completePurchase(CashBox cashbox, double moneyPaid, double actualCost) {
 			String[] options = { "Yes", "No" };
 			Menu inputMenu = new Menu("\nWould you like to make another purchase?", options); // Prompts user
 			boolean finished = false;
@@ -250,14 +278,14 @@ public class UserApp {
 				int option = inputMenu.getUserChoice(); // Calls getUserChoice() in Menu
 				switch (option) {
 				case 1:
-					displayInfo(); // Calls displayInfo() to make another purchase
+					displayInfo(cashbox); // Calls displayInfo() to make another purchase
 					break;
 				case 2:
 					System.out.println("Amount to be refunded: £" + df.format(machine.getCredit())); // Displays amount to be refunded
-					System.out.println(machine.giveChange(moneyPaid, actualCost)); // Calls giveChange() in VendingMachine using parameters
+					System.out.println(machine.giveChange(cashbox, moneyPaid, actualCost)); // Calls giveChange() in VendingMachine using parameters
 					if (machine.getCredit() == 0) { // Transaction successfully cancelled if credit = 0
 						System.out.println("\nTransaction cancelled. Remaining credit refunded.");
-						addCredit(); // Returns to initial state
+						addCredit(getCurrency()); // Returns to initial state
 					} else {
 						System.out.println("Credit: £" + machine.getCredit());
 						System.out.println("Error cancelling transacton.");
