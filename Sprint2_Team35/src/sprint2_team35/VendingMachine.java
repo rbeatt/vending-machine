@@ -372,11 +372,26 @@ public class VendingMachine {
 						// changes the string value of type into a enum.
 						ProductType itemType = null;
 						switch (type) {
-						case "Food":
-							itemType = ProductType.FOOD;
+						case "Hot Food":
+							itemType = ProductType.HOTFOOD;
 							break;
-						case "Drink":
-							itemType = ProductType.DRINK;
+						case "Hot Drink":
+							itemType = ProductType.HOTDRINK;
+							break;
+						case "Cold Drink":
+							itemType = ProductType.COLDDRINK;
+							break;
+						case "Confectionary":
+							itemType = ProductType.CONFECTIONARY;
+							break;
+						case "Ticket": 
+							itemType = ProductType.TICKET;
+							break;
+						case "Electronics":
+							itemType = ProductType.ELECTRONICS;
+							break;
+						case "Equipment":
+							itemType = ProductType.EQUIPMENT;
 							break;
 						case "Accessory":
 							itemType = ProductType.ACCESSORY;
