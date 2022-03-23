@@ -52,11 +52,26 @@ public class GenericProducts implements IProducts{
 		String productType = null;
 		//This switches enum to string.
 		switch (this.productType) {
-		case FOOD:
-			productType = "Food";
+		case HOTFOOD:
+			productType = "Hot Food";
 			break;
-		case DRINK:
-			productType = "Drink";
+		case HOTDRINK:
+			productType = "Hot Drink";
+			break;
+		case COLDDRINK:
+			productType = "Cold Drink";
+			break;
+		case CONFECTIONARY:
+			productType = "Confectionary";
+			break;
+		case TICKET:
+			productType = "Ticket";
+			break;
+		case ELECTRONICS:
+			productType = "Electronics";
+			break;
+		case EQUIPMENT:
+			productType = "Equipment";
 			break;
 		case ACCESSORY:
 			productType = "Accessory";
@@ -134,11 +149,26 @@ public class GenericProducts implements IProducts{
 	
 	public void setProductType(ProductType productType) {
 		switch (productType) {
-		case FOOD:
-			this.productType = ProductType.FOOD;
+		case HOTFOOD:
+			this.productType = ProductType.HOTFOOD;
 			break;
-		case DRINK:
-			this.productType = ProductType.DRINK;
+		case HOTDRINK:
+			this.productType = ProductType.HOTDRINK;
+			break;
+		case COLDDRINK:
+			this.productType = ProductType.COLDDRINK;
+			break;
+		case CONFECTIONARY:
+			this.productType = ProductType.CONFECTIONARY;
+			break;
+		case TICKET:
+			this.productType = ProductType.TICKET;
+			break;
+		case ELECTRONICS:
+			this.productType = ProductType.ELECTRONICS;
+			break;
+		case EQUIPMENT:
+			this.productType = ProductType.EQUIPMENT;
 			break;
 		case ACCESSORY:
 			this.productType = ProductType.ACCESSORY;

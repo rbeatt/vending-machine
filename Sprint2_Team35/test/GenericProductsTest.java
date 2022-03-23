@@ -27,8 +27,8 @@ class GenericProductsTest {
 	@Test
 	void testGetProductType() {
 		System.out.println("About to test get product type");
-		genericProduct.setProductType(ProductType.FOOD);
-		String expected = "Food";
+		genericProduct.setProductType(ProductType.HOTFOOD);
+		String expected = "Hot Food";
 		String actual = genericProduct.getProductType();
 		assertEquals(expected, actual);
 	}
@@ -90,8 +90,8 @@ class GenericProductsTest {
 	@Test
 	void testSetProductType() {
 		System.out.println("About to test set product type");
-		genericProduct.setProductType(ProductType.FOOD);
-		String expected = "Food";
+		genericProduct.setProductType(ProductType.HOTFOOD);
+		String expected = "Hot Food";
 		String actual = genericProduct.getProductType();
 		assertEquals(expected, actual);
 	}
@@ -134,11 +134,11 @@ class GenericProductsTest {
 	void testToString() {
 		System.out.println("About to test to string");
 		genericProduct.setProductName("name");
-		genericProduct.setProductType(ProductType.FOOD);
+		genericProduct.setProductType(ProductType.HOTFOOD);
 		genericProduct.setPrice(1.2);
 		genericProduct.setQuantity(5);
 		genericProduct.setProductSaleCount(3);
-		String expected = "name,Food,1.20,5,3";
+		String expected = "name,Hot Food,1.20,5,3";
 		String actual = genericProduct.toString();
 		assertEquals(expected, actual);
 	}

@@ -372,11 +372,26 @@ public class VendingMachine {
 						// changes the string value of type into a enum.
 						ProductType itemType = null;
 						switch (type) {
-						case "Food":
-							itemType = ProductType.FOOD;
+						case "Hot Food":
+							itemType = ProductType.HOTFOOD;
 							break;
-						case "Drink":
-							itemType = ProductType.DRINK;
+						case "Hot Drink":
+							itemType = ProductType.HOTDRINK;
+							break;
+						case "Cold Drink":
+							itemType = ProductType.COLDDRINK;
+							break;
+						case "Confectionary":
+							itemType = ProductType.CONFECTIONARY;
+							break;
+						case "Ticket": 
+							itemType = ProductType.TICKET;
+							break;
+						case "Electronics":
+							itemType = ProductType.ELECTRONICS;
+							break;
+						case "Equipment":
+							itemType = ProductType.EQUIPMENT;
 							break;
 						case "Accessory":
 							itemType = ProductType.ACCESSORY;
@@ -592,6 +607,10 @@ public class VendingMachine {
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public String displayProducts() {
 		if (item.length > 0) {
 			GenericProducts[] data = new GenericProducts[25];
@@ -642,6 +661,10 @@ public class VendingMachine {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param items
+	 */
 	private static void displayProducts(GenericProducts items[]) {
 		if (items != null && items.length > 0) {
 			for (int index = 0; index < 25; index++) {

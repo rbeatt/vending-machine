@@ -1,7 +1,7 @@
 package sprint2_team35;
 
 public enum ProductType {
-	FOOD("Food"),DRINK("Drink"),ACCESSORY("Accessory"),CLOTHING("Clothing"),OTHER("Other");
+	HOTFOOD("Hot Food"),HOTDRINK("Hot Drink"),COLDDRINK("Cold Drink"),CONFECTIONARY("Confectionary"),TICKET("Ticket"),ELECTRONICS("Electronics"),EQUIPMENT("Equipment"),ACCESSORY("Accessory"),CLOTHING("Clothing"),OTHER("Other");
 	
 	private String str;
 	
