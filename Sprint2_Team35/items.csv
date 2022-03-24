@@ -1,6 +1,5 @@
 Items in stock
 Location,Name,Type,Cost,Quantity,Sale Count
-<<<<<<< HEAD
 A1,A1item,Other,2.1,12,10
 A2,itemA2,Other,0.7,20,2
 A3,itemA3,Other,0.8,18,3
@@ -8,7 +7,6 @@ A4,itemA4,Other,0.0,20,9
 A5,a5,Other,1.6,5,7
 B1,itemB1,Other,1.6,12,0
 B2,A1 Item,Other,2.1,9,0
-=======
 A1,A1item,Hot Food,2.1,13,9
 A2,itemA2,Cold Drink,0.7,20,2
 A3,itemA3,Hot Drink,0.8,17,4
@@ -16,7 +14,6 @@ A4,itemA4,Confectionary,0.0,20,9
 A5,a5,Equipment,1.6,5,7
 B1,itemB1,Ticket,1.6,12,0
 B2,A1 Item,Other,2.1,8,1
->>>>>>> refs/remotes/origin/main
 B3,itemB3,Other,1.4,0,0
 B4,itemB4,Ticket,0.0,12,5
 B5,itemB5,Accessory,1.0,20,4
