@@ -2,121 +2,112 @@ package sprint2_team35;
 
 import java.text.DecimalFormat;
 
-public class CashBox implements ICashBox {
+/**
+ * This class models a cash box, each with an associated currency object instance and
+ * array of accepted coins.
+ */
 
-	private int total10s;
-	private int total20s;
-	private int total50s;
-	private int total1s;
-	private int total2s;
-	private double cashBoxAmount;
-	private static final DecimalFormat df = new DecimalFormat("0.00");
-	private double rate = 0.00;
+public class CashBox implements ICashBox {
+	private ChangeTube[] changeTubes;
 	private double[] acceptedCoins = { 0.10, 0.20, 0.50, 1.00, 2.00 };
-	private String cashBoxName = "GBP";
-	private String[] cashBoxSymbols = { "£", "p" };
+	private double cashBoxAmount;
+	private Currency currency = new Currency();
+	private static final DecimalFormat df = new DecimalFormat("0.00");
 
 	/**
-	 * Default constructor for CashBox
+	 * Constructor method for CashBox. This constructor should be used when creating
+	 * a CashBox instance for non GBP currencies.
+	 * 
+	 * @param acceptedCoins - a double array containing the accepted coin values for
+	 *                      the cash box.
+	 * @param currency      - the currency of the cash box
+	 */
+
+	public CashBox(double[] acceptedCoins, Currency currency) {
+		this.acceptedCoins = acceptedCoins;
+		this.currency = currency;
+		this.changeTubes = new ChangeTube[acceptedCoins.length];
+
+		/*
+		 * For loop to create a new ChangeTube object instance for each coin in
+		 * acceptedCoins.
+		 */
+
+		for (int i = 0; i < this.acceptedCoins.length; i++) {
+			changeTubes[i] = new ChangeTube();
+			this.changeTubes[i].setTubeName("Tube " + (i + 1));
+			this.changeTubes[i].setQuantity(0);
+		}
+	}
+
+	/**
+	 * Default constructor method for CashBox
 	 */
 
 	public CashBox() {
+		this.changeTubes = new ChangeTube[acceptedCoins.length];
+
+		/*
+		 * For loop to create a new ChangeTube object instance for each coin in
+		 * acceptedCoins.
+		 */
+
+		for (int i = 0; i < this.acceptedCoins.length; i++) {
+			changeTubes[i] = new ChangeTube();
+			this.changeTubes[i].setTubeName("Tube " + (i + 1));
+			this.changeTubes[i].setQuantity(0);
+		}
 	}
 
 	/**
-	 * Accessor method for cashBoxSymbols
+	 * Getter method for changeTubes
 	 * 
-	 * @return - an array containing associated currency symbols, e.g., £, p
+	 * @return - an array containing references to ChangeTube objects
 	 */
 
-	public String[] getCashBoxSymbols() {
-		return this.cashBoxSymbols;
+	public ChangeTube[] getChangeTubes() {
+		return this.changeTubes;
 	}
 
 	/**
-	 * Accessor method for cashBoxName
+	 * Setter method for changeTubes
 	 * 
-	 * @return - the currency type of the cash box
+	 * @param tubeAmount - an Integer array containing the amount each tube should
+	 *                   be set to
 	 */
 
-	public String getCashBoxName() {
-		return this.cashBoxName;
+	public void setChangeTubes(int[] tubeAmount) {
+
+		// For loop to iterate through each ChangeTube object in changeTubes to set the
+		// total amount.
+
+		for (int i = 0; i < tubeAmount.length; i++) {
+			this.changeTubes[i].setQuantity(tubeAmount[i]);
+		}
 	}
 
 	/**
-	 * Accessor method for acceptedCoins
+	 * Getter method for currency
 	 * 
-	 * @return - an array containing the accepted coins for the associated currency,
-	 *         e.g., 10p, 20p, 50p, £1, £2
+	 * @return - Currency object
 	 */
 
-	public double[] getAcceptedCoins() {
-		return this.acceptedCoins;
+	public Currency getCurrency() {
+		return this.currency;
 	}
 
 	/**
-	 * Accessor method for rate
+	 * Setter method for currency
 	 * 
-	 * @return - the rate of the currency against the default GBP currency, e.g.,
-	 *         1.19 for EUR
+	 * @param currency - Currency object
 	 */
 
-	public double getRate() {
-		return this.rate;
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
 	}
 
 	/**
-	 * Accessor method for total10s
-	 * 
-	 * @return - the total number of 10p coins in the change tubes
-	 */
-
-	public int getTotal10s() {
-		return this.total10s;
-	}
-
-	/**
-	 * Accessor method for total20s
-	 * 
-	 * @return - the total number of 20p coins in the change tubes
-	 */
-
-	public int getTotal20s() {
-		return this.total20s;
-	}
-
-	/**
-	 * Accessor methods for total50s
-	 * 
-	 * @return - the total number of 50p coins in the change tubes
-	 */
-
-	public int getTotal50s() {
-		return this.total50s;
-	}
-
-	/**
-	 * Accessor methods for total1s
-	 * 
-	 * @return - the total number of £1 coins in the change tubes
-	 */
-
-	public int getTotal1s() {
-		return this.total1s;
-	}
-
-	/**
-	 * Accessor methods for total2s
-	 * 
-	 * @return - the total number of £2 coins in the change tubes
-	 */
-
-	public int getTotal2s() {
-		return this.total2s;
-	}
-
-	/**
-	 * Accessor method for cashBoxAmount
+	 * Getter method for cashBoxAmount
 	 * 
 	 * @return - the total amount in the cash box
 	 */
@@ -126,68 +117,7 @@ public class CashBox implements ICashBox {
 	}
 
 	/**
-	 * Mutator method for rate
-	 * 
-	 * @param - the rate for the currency against the default GBP currency, e.g.,
-	 *          1.19 for EUR
-	 */
-
-	public void setRate(double rate) {
-		this.rate = rate;
-	}
-
-	/**
-	 * Mutator method for total10s
-	 * 
-	 * @param - the total number of 10p coins to be added to change tubes
-	 */
-
-	public void setTotal10s(int total10s) {
-		this.total10s = total10s;
-	}
-
-	/**
-	 * Mutator method for total20s
-	 * 
-	 * @param - the total number of 20p coins to be added to change tubes
-	 */
-
-	public void setTotal20s(int total20s) {
-		this.total20s = total20s;
-	}
-
-	/**
-	 * Mutator method for total50s
-	 * 
-	 * @param - the total number of 50p coins to be added to change tubes
-	 */
-
-	public void setTotal50s(int total50s) {
-		this.total50s = total50s;
-	}
-
-	/**
-	 * Mutator method for total1s
-	 * 
-	 * @param - the total number of £1 coins to be added to change tubes
-	 */
-
-	public void setTotal1s(int total1s) {
-		this.total1s = total1s;
-	}
-
-	/**
-	 * Mutator method for total2s
-	 * 
-	 * @param - the total number of £2 coins to be added to change tubes
-	 */
-
-	public void setTotal2s(int total2s) {
-		this.total2s = total2s;
-	}
-
-	/**
-	 * Mutator method for cashBoxAmount
+	 * Setter method for cashBoxAmount
 	 * 
 	 * @param cashBoxAmount - the total amount to be added to the cash box
 	 */
@@ -203,70 +133,23 @@ public class CashBox implements ICashBox {
 	 */
 
 	public void enterCoin(double coinEntered) {
+		for (int i = 0; i < this.changeTubes.length; i++) {
+			int total = changeTubes[i].getQuantity();
 
-		// When a 10p is entered, the total 10p coins goes up by 1
-		if (coinEntered == 0.1 && getTotal10s() < 50) {
+			/*
+			 * If the coin entered is in acceptedCoins and the total is less than 50, coins
+			 * are added to the change tubes.
+			 */
 
-			this.total10s += 1;
+			if (coinEntered == this.acceptedCoins[i] && total < 50) {
+				this.changeTubes[i].setQuantity(total + 1);
 
+				// If the quantity is greater than 50, coins are added to the cash box.
+
+			} else if (coinEntered == this.acceptedCoins[i] && total >= 50) {
+				this.cashBoxAmount += 1;
+			}
 		}
-		// If there are more than 50 20ps, it will be sent to the Cashbox
-		else if (coinEntered == 0.1 && getTotal20s() >= 50) {
-
-			this.cashBoxAmount += 0.1;
-
-		}
-
-		// When a 20p is entered, the total 20p coins goes up by 1
-		if (coinEntered == 0.2 && getTotal20s() < 50) {
-
-			this.total20s += 1;
-
-		}
-		// If there are more than 50 20ps, it will be sent to the Cashbox
-		else if (coinEntered == 0.2 && getTotal20s() >= 50) {
-
-			this.cashBoxAmount += 0.2;
-
-		}
-
-		// When a 50p is entered, the total 50p coins goes up by 1
-		if (coinEntered == 0.5 && getTotal50s() < 50) {
-
-			this.total50s += 1;
-
-		}
-
-		else if (coinEntered == 0.5 && getTotal50s() >= 50) {
-
-			this.cashBoxAmount += 0.5;
-		}
-
-		// When a £1 is entered, the total �1 coins goes up by 1
-		if (coinEntered == 1 && getTotal1s() < 50) {
-
-			this.total1s += 1;
-
-		}
-
-		else if (coinEntered == 1 && getTotal1s() >= 50) {
-
-			this.cashBoxAmount += 1;
-
-		}
-		// When a £2 is entered, the total �2 coins goes up by 1
-		if (coinEntered == 2 && getTotal2s() < 50) {
-
-			this.total2s += 1;
-
-		}
-
-		else if (coinEntered == 2 && getTotal2s() >= 50) {
-
-			this.cashBoxAmount += 2;
-
-		}
-
 	}
 
 	/**
@@ -279,32 +162,24 @@ public class CashBox implements ICashBox {
 	 */
 
 	public int[] giveChange(double moneyPaid, double actualCost) {
-		int[] change = { 0, 0, 0, 0, 0 };
-		while (moneyPaid - actualCost >= 1.99 && this.total2s > 0) {
-			change[4] += 1;
-			this.total2s -= 1;
-			moneyPaid -= 2.0;
+		int[] change = new int[changeTubes.length];
+		for (int i = (this.changeTubes.length - 1); i >= 0; i--) {
+			int total = this.changeTubes[i].getQuantity();
+			while (moneyPaid - actualCost >= (this.acceptedCoins[i] - 0.01) && this.changeTubes[i].getQuantity() > 0) { // e.g.,
+																														// if
+																														// >
+																														// 1.99,
+																														// add
+																														// 2
+																														// to
+																														// change
+																														// array
+				change[i] += 1;
+				this.changeTubes[i].setQuantity(total - 1); // Change given from change tubes
+				moneyPaid -= this.acceptedCoins[i];
+			}
 		}
-		while (moneyPaid - actualCost >= 0.99 && this.total1s > 0) {
-			change[3] += 1;
-			this.total1s -= 1;
-			moneyPaid -= 1.0;
-		}
-		while (moneyPaid - actualCost >= 0.49 && this.total50s > 0) {
-			change[2] += 1;
-			this.total50s -= 1;
-			moneyPaid -= 0.50;
-		}
-		while (moneyPaid - actualCost >= 0.19 && this.total20s > 0) {
-			change[1] += 1;
-			this.total20s -= 1;
-			moneyPaid -= 0.20;
-		}
-		while (moneyPaid - actualCost >= 0.09 && this.total10s > 0) {
-			change[0] += 1;
-			this.total10s -= 1;
-			moneyPaid -= 0.10;
-		}
+
 		return change;
 	}
 
@@ -317,39 +192,22 @@ public class CashBox implements ICashBox {
 
 	public void addTubes(int[] coins) {
 		try {
-			this.total10s += coins[0];
-			if (getTotal10s() < 0) {
-				setTotal10s(0);
-			} else if (getTotal10s() > 50) {
-				setTotal10s(50);
+			for (int i = 0; i < coins.length; i++) {
+				int total = this.changeTubes[i].getQuantity();
+				this.changeTubes[i].setQuantity(total + coins[i]);
+
+				// If ChangeTube quantity is less than 0, set quantity to 0
+
+				if (this.changeTubes[i].getQuantity() < 0) {
+					this.changeTubes[i].setQuantity(0);
+
+					// If ChangeTube is greater than 50, set quantity to 50
+
+				} else if (this.changeTubes[i].getQuantity() > 50) {
+					this.changeTubes[i].setQuantity(50);
+				}
 			}
 
-			this.total20s += coins[1];
-			if (getTotal20s() < 0) {
-				setTotal20s(0);
-			} else if (getTotal20s() > 50) {
-				setTotal20s(50);
-			}
-			this.total50s += coins[2];
-			if (getTotal50s() < 0) {
-				setTotal50s(0);
-			} else if (getTotal50s() > 50) {
-				setTotal50s(50);
-			}
-
-			this.total1s += coins[3];
-			if (getTotal1s() < 0) {
-				setTotal1s(0);
-			} else if (getTotal1s() > 50) {
-				setTotal1s(50);
-			}
-
-			this.total2s += coins[4];
-			if (getTotal2s() < 0) {
-				setTotal2s(0);
-			} else if (getTotal2s() > 50) {
-				setTotal2s(50);
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -363,15 +221,35 @@ public class CashBox implements ICashBox {
 	 */
 
 	public String toString() {
-		String desc = "Total in collection box: " + this.getCashBoxSymbols()[0];
-		desc += df.format(cashBoxAmount);
+		String desc = "Total in collection box: £";
+		desc += df.format(getCashBoxAmount());
 		desc += "\nCoins in tubes: ";
-		desc += "\n10" + this.cashBoxSymbols[1] + ": " + getTotal10s();
-		desc += "\n20" + this.cashBoxSymbols[1] + ": " + +getTotal20s();
-		desc += "\n50" + this.cashBoxSymbols[1] + ": " + +getTotal50s();
-		desc += "\n" + this.cashBoxSymbols[0] + "1: " + getTotal1s();
-		desc += "\n" + this.cashBoxSymbols[0] + "2: " + getTotal2s();
+		for (int i = 0; i < this.acceptedCoins.length; i++) {
+			desc += "\n£" + df.format(this.acceptedCoins[i]) + ": " + changeTubes[i].getQuantity();
+		}
 		return desc;
 	}
 
-}		
+	/**
+	 * Getter method for acceptedCoins
+	 * 
+	 * @return - a double array containing the accepted coin values for the cash
+	 *         box.
+	 */
+
+	public double[] getAcceptedCoins() {
+		return acceptedCoins;
+	}
+
+	/**
+	 * Setter method for acceptedCoins
+	 * 
+	 * @param acceptedCoins - a double array containing the accepted coin values for
+	 *                      the cash box.
+	 */
+
+	public void setAcceptedCoins(double[] acceptedCoins) {
+		this.acceptedCoins = acceptedCoins;
+	}
+
+}

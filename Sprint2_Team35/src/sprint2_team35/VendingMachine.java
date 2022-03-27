@@ -2,6 +2,7 @@ package sprint2_team35;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -13,12 +14,11 @@ import java.io.FileNotFoundException;
  */
 
 public class VendingMachine {
-
 	private GenericProducts[][] item = new GenericProducts[5][5];
 	private CashBox cashBox = new CashBox();
-	private CashBox eurCashBox = new EuroCashBox();
-	private double credit = 0;
+	private double credit = 0.00;
 	private USBDevice usbPort = new USBDevice(); // USBDevice object
+	private static final DecimalFormat df = new DecimalFormat("0.00");
 
 	/**
 	 * Constructor method for VendingMachine object. Loads the relevant item and
@@ -26,18 +26,11 @@ public class VendingMachine {
 	 */
 
 	public VendingMachine() {
-		loadFromFile(this.cashBox);
-		loadFromFile(this.eurCashBox);
+		loadFromFile();
 	}
-	
-	public double getRate(CashBox cashbox) {
-		return cashbox.getRate();
-	}
-	
-	
 
 	/**
-	 * Get method for an item in the machine.
+	 * Getter method for an item in the machine.
 	 * 
 	 * @param row    - the row index of the item
 	 * @param column - the column index of the item
@@ -47,44 +40,48 @@ public class VendingMachine {
 	public String getItem(int row, int column) {
 		return item[row][column].toString();
 	}
-	
-	public CashBox getCashBox(String currency) {
-		if (currency == "EUR") {
-			return this.eurCashBox;
-		}
-		else if (currency == "GBP") {
-			return this.cashBox;
-		}
-		else {
-			return this.cashBox;
-		}
+
+	/**
+	 * Setter method for the CashBox of VendingMachine
+	 * 
+	 * @param cashbox - the selected cash box
+	 * @return - the cash box of selected currency
+	 */
+
+	public CashBox setCashBox(CashBox cashbox) {
+		this.cashBox = cashbox;
+
+		loadFromFile();
+
+		return this.cashBox;
 	}
 
 	/**
-	 * Get method for an item cost in the machine.
+	 * Getter method for an item cost in the machine.
 	 * 
 	 * @param row    - the row index of the item
 	 * @param column - the column index of the item
 	 * @return - the item's cost
 	 */
+
 	public double getCost(int row, int column) {
 		return item[row][column].getPrice();
 	}
 
 	/**
-	 * Get method for the machine's cashbox.
+	 * Getter method for the machine's cash box.
 	 * 
-	 * @return - the cashbox data, as a string
+	 * @return - the cash box data, as a string
 	 */
 
-	public String getCashbox(CashBox cashbox) {
-		return cashbox.toString();
+	public String getCashbox() {
+		return this.cashBox.toString();
 	}
 
 	/**
-	 * Get method for the credit input by a customer.
+	 * Getter method for the credit input by a customer.
 	 * 
-	 * @return - the credit
+	 * @return - the credit on the vending machine
 	 */
 
 	public double getCredit() {
@@ -92,7 +89,7 @@ public class VendingMachine {
 	}
 
 	/**
-	 * Set method for the name of an item in the machine.
+	 * Setter method for the name of an item in the machine.
 	 * 
 	 * @param row    - the row index of the item
 	 * @param column - the column index of the item
@@ -104,18 +101,18 @@ public class VendingMachine {
 	}
 
 	/**
-	 * Set method for the type of an item in the machine
+	 * Setter method for the type of an item in the machine
 	 * 
-	 * @param row
-	 * @param column
-	 * @param type
+	 * @param row    - the row index of the item
+	 * @param column - the column index of the item
+	 * @param type   - the new type of product
 	 */
 	public void setItemType(int row, int column, ProductType type) {
 		item[row][column].setProductType(type);
 	}
 
 	/**
-	 * Set method for the cost of an item in the machine.
+	 * Setter method for the cost of an item in the machine.
 	 * 
 	 * @param row    - the row index of the item
 	 * @param column - the column index of the item
@@ -127,7 +124,7 @@ public class VendingMachine {
 	}
 
 	/**
-	 * Set method for the quantity of an item in the machine.
+	 * Setter method for the quantity of an item in the machine.
 	 * 
 	 * @param row      - the row index of the item
 	 * @param column   - the column index of the item
@@ -139,53 +136,33 @@ public class VendingMachine {
 	}
 
 	/**
-	 * Set method for the sale count of an item in the machine
+	 * Setter method for the sale count of an item in the machine
 	 * 
-	 * @param row
-	 * @param column
-	 * @param saleCount
+	 * @param row       - the row index of the item
+	 * @param column    - the column index of the item
+	 * @param saleCount - the new sale count of the item
 	 */
+
 	public void setItemSaleCount(int row, int column, int saleCount) {
 		item[row][column].setProductSaleCount(saleCount);
 	}
 
 	/**
-	 * Set method for the quantity of coins in tubes.
-	 * 
-	 * @param ten    - the quantity of 10ps
-	 * @param twenty - the quantity of 20ps
-	 * @param fifty  - the quantity of 50ps
-	 * @param one    - the quantity of �1s
-	 * @param two    - the quantity of �2s
-	 */
-
-	public void setTubes(CashBox cashbox, int ten, int twenty, int fifty, int one, int two) {
-		cashbox.setTotal10s(ten);
-		cashbox.setTotal20s(twenty);
-		cashbox.setTotal50s(fifty);
-		cashbox.setTotal1s(one);
-		cashbox.setTotal2s(two);
-	}
-
-	/**
 	 * Adds coins into tubes on top of existing coins
 	 * 
-	 * @param ten    - the quantity of 10ps to add
-	 * @param twenty - the quantity of 20ps to add
-	 * @param fifty  - the quantity of 50ps to add
-	 * @param one    - the quantity of �1s to add
-	 * @param two    - the quantity of �2s to add
+	 * @param values - an Integer array containing the amount to be added to each
+	 *               tube
+	 * 
 	 */
 
-	public void addTubes(CashBox cashbox, int[] array) {
-		cashbox.addTubes(array);
+	public void addTubes(int[] values) {
+		this.cashBox.addTubes(values);
 	}
 
-
 	/**
-	 * Set method for the credit input by a customer.
+	 * Setter method for the credit input by a customer.
 	 * 
-	 * @param credit - the credit
+	 * @param credit - the new credit on the vending machine
 	 */
 
 	public void setCredit(double credit) {
@@ -193,11 +170,11 @@ public class VendingMachine {
 	}
 
 	/**
-	 * This method resets the value in the collection box to �0.
+	 * This method resets the value in the collection box to 0.00.
 	 */
 
-	public void resetCashbox(CashBox cashbox) {
-		cashbox.setCashBoxAmount(0.00);
+	public void resetCashbox() {
+		this.cashBox.setCashBoxAmount(0.00);
 	}
 
 	/**
@@ -205,21 +182,11 @@ public class VendingMachine {
 	 * files.
 	 */
 
-	public void saveToFile(CashBox cashbox) {	
-		String myDir = null;
+	public void saveToFile() {
+		Currency currency = this.cashBox.getCurrency();
+		String myDir = currency.getMyDir();
 		PrintWriter myPw = null;
-		String currencySymbol = cashbox.getCashBoxSymbols()[0];
-		String altSymbol = cashbox.getCashBoxSymbols()[1];
-		
-		if (cashbox == this.eurCashBox) {
-			myDir = "EURcashbox.csv";
-		}
-		else if (cashbox == this.cashBox) {
-			myDir = "cashbox.csv";
-		}
-		else {
-			myDir = "cashbox.csv";
-		}
+		String currencySymbol = currency.getCurrencySymbols()[0];
 
 		// Writing cashbox data
 
@@ -232,16 +199,11 @@ public class VendingMachine {
 			myPw.flush();
 			myPw.println("Coins in tubes\nValue,Quantity");
 			myPw.flush();
-			myPw.println("10" + altSymbol + " ," + cashbox.getTotal10s());
-			myPw.flush();
-			myPw.println("20" + altSymbol + " ," + cashbox.getTotal20s());
-			myPw.flush();
-			myPw.println("50" + altSymbol + " ," + cashbox.getTotal50s());
-			myPw.flush();
-			myPw.println(currencySymbol + "1" + " ," + cashbox.getTotal1s());
-			myPw.flush();
-			myPw.println(currencySymbol + "2" + " ," + cashbox.getTotal2s());
-			myPw.flush();
+			for (int i = 0; i < this.cashBox.getChangeTubes().length; i++) {
+				myPw.println(currencySymbol + df.format(this.cashBox.getAcceptedCoins()[i]) + " ,"
+						+ this.cashBox.getChangeTubes()[i].getQuantity());
+				myPw.flush();
+			}
 			System.out.println("Cashbox data written successfully.");
 		} catch (IOException e) {
 			System.out.println("Error writing cashbox data to file.");
@@ -291,25 +253,16 @@ public class VendingMachine {
 	}
 
 	/**
-	 * This method loads the data for items, coin holders, and the cashbox in the
+	 * This method loads the data for items, coin holders, and the cash box in the
 	 * machine from text files.
 	 */
 
-	public void loadFromFile(CashBox cashbox) {
-
+	public void loadFromFile() {
+		Currency currency = this.cashBox.getCurrency();
 		File myFile;
 		Scanner myScanner = null;
-		String myDir = null;
-		
-		if (cashbox == this.eurCashBox) {
-			myDir = "EURcashbox.csv";
-		}
-		else if (cashbox == this.cashBox) {
-			myDir = "cashbox.csv";
-		}
-		else {
-			myDir = "cashbox.csv";
-		}
+		String myDir = currency.getMyDir();
+		int[] tubeAmounts = new int[this.cashBox.getAcceptedCoins().length];
 
 		// Loading cashbox data
 
@@ -319,32 +272,27 @@ public class VendingMachine {
 			try {
 				myScanner.nextLine();
 				double total = myScanner.nextDouble();
-				cashbox.setCashBoxAmount(total);
-				if (cashbox.getCashBoxAmount() < 0) {
-					cashbox.setCashBoxAmount(0.00);
+				this.cashBox.setCashBoxAmount(total);
+				if (this.cashBox.getCashBoxAmount() < 0) {
+					this.cashBox.setCashBoxAmount(0.00);
 				}
 				myScanner.nextLine();
 				myScanner.nextLine();
 				myScanner.nextLine();
-				String[] cashboxStr = myScanner.nextLine().split(",");
-				int ten = Integer.parseInt(cashboxStr[1]);
-				cashboxStr = myScanner.nextLine().split(",");
-				int twenty = Integer.parseInt(cashboxStr[1]);
-				cashboxStr = myScanner.nextLine().split(",");
-				int fifty = Integer.parseInt(cashboxStr[1]);
-				cashboxStr = myScanner.nextLine().split(",");
-				int one = Integer.parseInt(cashboxStr[1]);
-				cashboxStr = myScanner.nextLine().split(",");
-				int two = Integer.parseInt(cashboxStr[1]);
-				setTubes(cashbox,ten, twenty, fifty, one, two);
+				for (int i = 0; i < tubeAmounts.length; i++) {
+					String[] cashboxStr = myScanner.nextLine().split(",");
+					int value = Integer.parseInt(cashboxStr[1]);
+					tubeAmounts[i] = value;
+				}
+				this.cashBox.setChangeTubes(tubeAmounts);
 			} catch (Exception e) {
 				System.out.println("Error occurred when loading cashbox data.\n");
-				cashbox.setCashBoxAmount(0.00);
+				this.cashBox.setCashBoxAmount(0.00);
 				e.printStackTrace();
 			}
 		} catch (FileNotFoundException e) {
 			System.out.println("Error occurred when loading cashbox data. File not found.\n");
-			cashbox.setCashBoxAmount(0.00);
+			this.cashBox.setCashBoxAmount(0.00);
 		}
 
 		// Loading item data
@@ -384,7 +332,7 @@ public class VendingMachine {
 						case "Confectionary":
 							itemType = ProductType.CONFECTIONARY;
 							break;
-						case "Ticket": 
+						case "Ticket":
 							itemType = ProductType.TICKET;
 							break;
 						case "Electronics":
@@ -439,7 +387,7 @@ public class VendingMachine {
 	}
 
 	/**
-	 * This method simulates an owner restocking an item in the machine.
+	 * This method simulates an owner re stocking an item in the machine.
 	 */
 
 	public void restock(int row, int column, int amount) {
@@ -456,27 +404,25 @@ public class VendingMachine {
 	/**
 	 * This method calculates how much change should be given in a transaction and
 	 * deducts from the coin holders appropriately.
+	 * 
+	 * @return - a String containing the change given
+	 * @param moneyPaid  - the total amount inserted into the vending machine for a
+	 *                   single transaction
+	 * @param actualCost - the total amount spent in the vending machine
+	 * 
 	 */
 
-	public String giveChange(CashBox cashbox, double moneyPaid, double actualCost) {
-		String currencySymbol = cashbox.getCashBoxSymbols()[0];
-		String altSymbol = cashbox.getCashBoxSymbols()[1];
-		int[] change = cashbox.giveChange(moneyPaid, actualCost);
+	public String giveChange(double moneyPaid, double actualCost) {
+		Currency currency = this.cashBox.getCurrency();
+		String currencySymbol = currency.getCurrencySymbols()[0];
+		int[] change = this.cashBox.giveChange(moneyPaid, actualCost);
+
 		String changeStr = "Change given: ";
-		if (change[4] > 0) {
-			changeStr += change[4] + " " + currencySymbol + "2 coin(s), ";
-		}
-		if (change[3] > 0) {
-			changeStr += change[3] + " " + currencySymbol + "1 coin(s), ";
-		}
-		if (change[2] > 0) {
-			changeStr += change[2] + " 50" + altSymbol + " coin(s), ";
-		}
-		if (change[1] > 0) {
-			changeStr += change[1] + " 20" + altSymbol + " coin(s), ";
-		}
-		if (change[0] > 0) {
-			changeStr += change[0] + " 10" + altSymbol + " coin(s), ";
+		for (int i = 0; i < change.length; i++) {
+			if (change[i] > 0) {
+				changeStr += "x" + change[i] + " " + currencySymbol + df.format(this.cashBox.getAcceptedCoins()[i])
+						+ " ";
+			}
 		}
 		if (changeStr.length() > 15) {
 			changeStr = changeStr.substring(0, changeStr.length() - 2);
@@ -484,7 +430,7 @@ public class VendingMachine {
 			changeStr += "None";
 		}
 		this.credit = 0.0; // Sets credit to 0
-		saveToFile(cashbox);
+		saveToFile();
 		return changeStr + ".\n";
 	}
 
@@ -496,8 +442,9 @@ public class VendingMachine {
 	 * @return - the total credit
 	 */
 
-	public double addCredit(CashBox cashbox, double coin) {
-		double[] acceptedCoins = cashbox.getAcceptedCoins();
+	public double addCredit(double coin) {
+		Currency currency = this.cashBox.getCurrency();
+		double[] acceptedCoins = this.cashBox.getAcceptedCoins();
 		boolean isAccepted = false;
 
 		for (int i = 0; i < acceptedCoins.length; i++) {
@@ -508,8 +455,8 @@ public class VendingMachine {
 
 		if (isAccepted) {
 
-			if (cashbox != cashBox) {
-				double conversion = (coin / cashbox.getRate());
+			if (currency.getCurrencyName() != "GBP") {
+				double conversion = (coin / currency.getRate());
 				double rounded = Math.round(conversion * 10.0) / 10.0;
 				this.credit += rounded;
 			} else {
@@ -606,7 +553,7 @@ public class VendingMachine {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -660,7 +607,7 @@ public class VendingMachine {
 			System.out.println("No data to display.");
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param items
@@ -677,41 +624,27 @@ public class VendingMachine {
 		}
 	}
 
-	/*private GenericProducts searchProduct(String productName) {
-		int index = 0;
-		for (GenericProducts products[] : item) {
-			String art = products[index++].getProductName();
-			if (productName.equals(art)) {
-				return products[index];
-			}
-		}
+	/*
+	 * private GenericProducts searchProduct(String productName) { int index = 0;
+	 * for (GenericProducts products[] : item) { String art =
+	 * products[index++].getProductName(); if (productName.equals(art)) { return
+	 * products[index]; } }
+	 * 
+	 * return null; }
+	 */
 
-		return null;
-	}*/
+	/*
+	 * private String[] getProductInfo(String productName) { if (item.length > 0) {
+	 * String data[] = new String[item.length]; int index1 = 0; int index2 = 0;
+	 * GenericProducts product = searchProduct(productName); if (product != null) {
+	 * for (GenericProducts products[] : item) { String item =
+	 * products[index1++].getProductName(); if (productName.equals(item)) {
+	 * data[index2++] = products[index1].toString(); } } return data; } else {
+	 * return null; } } return null; }
+	 */
 
-	/*private String[] getProductInfo(String productName) {
-		if (item.length > 0) {
-			String data[] = new String[item.length];
-			int index1 = 0;
-			int index2 = 0;
-			GenericProducts product = searchProduct(productName);
-			if (product != null) {
-				for (GenericProducts products[] : item) {
-					String item = products[index1++].getProductName();
-					if (productName.equals(item)) {
-						data[index2++] = products[index1].toString();
-					}
-				}
-				return data;
-			} else {
-				return null;
-			}
-		}
-		return null;
-	}*/
-	
 	public String searchProduct(int row, int column) {
-		if(item.length > 0) {
+		if (item.length > 0) {
 			GenericProducts data = null;
 			data = item[row][column];
 			String str = data.toString();
@@ -719,5 +652,4 @@ public class VendingMachine {
 		}
 		return null;
 	}
-
 }

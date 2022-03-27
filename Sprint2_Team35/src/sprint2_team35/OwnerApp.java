@@ -8,8 +8,11 @@ public class OwnerApp {
 	private static Scanner myScanner = new Scanner(System.in);
 
 	// Declaring and initialising vending machine object
+
 	private static VendingMachine machine = new VendingMachine();
 	
+	// Decimal format
+
 	private static final DecimalFormat df = new DecimalFormat("0.00");
 
 	public static void main(String[] args) {
@@ -17,8 +20,8 @@ public class OwnerApp {
 		// Array of menu options
 
 		String[] options = { "Restock machine", "Top up tubes", "View total in cashbox and tubes", "Set prices",
-				"Reset cashbox", "Perform a software update", "Change item name", "Show popular items", "Search Product",
-				"Exit Owner Mode" };
+				"Empty cashbox", "Perform a software update", "Change item name", "Show popular items",
+				"Search Product", "Exit Owner Mode" };
 		Menu vendingMenu = new Menu("\nOwner Mode", options);
 
 		boolean finished = false;
@@ -29,16 +32,16 @@ public class OwnerApp {
 				restockMachine();
 				break;
 			case 2:
-				topUpTubes(getCurrency());
+				topUpTubes(setCashBox());
 				break;
 			case 3:
-				viewTotal(getCurrency());
+				viewTotal(setCashBox());
 				break;
 			case 4:
 				setPrices();
 				break;
 			case 5:
-				resetCashbox(getCurrency());
+				resetCashbox(setCashBox());
 				break;
 			case 6:
 				softwareUpdate();
@@ -62,7 +65,14 @@ public class OwnerApp {
 		} while (!finished); // Loop finishes when boolean value is true
 	}
 
-	private static CashBox getCurrency() {
+	/**
+	 * This method is used to set the appropriate cash box for the selected
+	 * currency. A list of available currencies are displayed in a switch.
+	 * 
+	 * @return - CashBox instance
+	 */
+
+	private static CashBox setCashBox() {
 		boolean finished = false;
 		String[] currencies = { "GBP", "EUR" };
 		Menu currencyMenu = new Menu("\nPlease select which cash box you would like to interact with: ", currencies);
@@ -71,10 +81,10 @@ public class OwnerApp {
 			switch (option) {
 			case 1:
 				finished = true;
-				return machine.getCashBox(currencies[0]);
+				return machine.setCashBox(new CashBox());
 			case 2:
 				finished = true;
-				return machine.getCashBox(currencies[1]);
+				return machine.setCashBox(new EURCashBox());
 			default:
 				System.out.println("\nInvalid selection");
 				break;
@@ -85,7 +95,7 @@ public class OwnerApp {
 	}
 
 	/**
-	 * This method lets a machine owner restock the items in the machine.
+	 * This method lets a machine owner re stock the items in the machine.
 	 */
 
 	private static void restockMachine() {
@@ -112,7 +122,7 @@ public class OwnerApp {
 							System.out.println("Item restocked!\n");
 							finished = true;
 							amountSet = true;
-							machine.saveToFile(null);
+							machine.saveToFile();
 						} else {
 							System.out.println("Please input a non-negative integer.");
 						}
@@ -131,42 +141,46 @@ public class OwnerApp {
 
 	/**
 	 * This method lets a machine owner top up the change dispenser tubes.
+	 * 
+	 * @param cashbox - the cash box being modified
 	 */
 
 	private static void topUpTubes(CashBox cashbox) {
+		Currency currency = cashbox.getCurrency();
 		int add = 0;
 		int[] data = new int[cashbox.getAcceptedCoins().length];
 		for (int i = 0; i < cashbox.getAcceptedCoins().length; i++) {
-			System.out.println("How many " + cashbox.getCashBoxSymbols()[0]
-					+ df.format(cashbox.getAcceptedCoins()[i]) + " would you like to add?: ");
+			System.out.println("How many " + currency.getCurrencySymbols()[0] + df.format(cashbox.getAcceptedCoins()[i])
+					+ " would you like to add?: ");
 			try {
-			add = myScanner.nextInt();
-			myScanner.nextLine();
-			}
-			catch(Exception e) {
+				add = myScanner.nextInt();
+				myScanner.nextLine();
+			} catch (Exception e) {
 				System.out.println("Invalid coin amount.");
 				add = 0;
 			}
-			
+
 			data[i] = add;
 		}
 
 		try {
-			machine.addTubes(cashbox, data);
+			machine.addTubes(data);
 			System.out.println("Coins added successfully.");
 		} catch (Exception e) {
 			System.out.println("An invalid amount was added.");
 		}
-		machine.saveToFile(cashbox);
+		machine.saveToFile();
 	}
 
 	/**
 	 * This method lets a machine owner view the total money in the collection box
 	 * and change dispenser tubes.
+	 * 
+	 * @param cashbox - the cash box being modified
 	 */
 
 	private static void viewTotal(CashBox cashbox) {
-		System.out.println("\n" + machine.getCashbox(cashbox) + "\n");
+		System.out.println("\n" + machine.getCashbox() + "\n");
 	}
 
 	/**
@@ -196,7 +210,7 @@ public class OwnerApp {
 							System.out.println("\nCost set");
 							finished = true;
 							priceSet = true;
-							machine.saveToFile(null);
+							machine.saveToFile();
 						} else {
 							System.out.println("\nPlease input a valid double value.");
 						}
@@ -213,6 +227,12 @@ public class OwnerApp {
 		} while (!finished);
 
 	}
+
+	/**
+	 * This method accepts input from the user to search for products
+	 * 
+	 * @return - an Integer array containing the row and column index of the product
+	 */
 
 	private static int[] getItem() {
 		System.out.println("\nSelect an item to make changes to (e.g., A1, B3, etc.)");
@@ -317,7 +337,7 @@ public class OwnerApp {
 								System.out.println("\nName set!");
 								finished = true;
 								nameSet = true;
-								machine.saveToFile(null);
+								machine.saveToFile();
 							} else {
 								System.out.println("\nName not set! No user input was detected.");
 								finished = false;
@@ -337,13 +357,13 @@ public class OwnerApp {
 	}
 
 	/**
-	 * This method lets a machine owner reset the cashbox.
+	 * This method lets a machine owner reset the cash box.
 	 */
 
 	private static void resetCashbox(CashBox cashbox) {
 		System.out.println("\nCashbox reset!");
-		machine.resetCashbox(cashbox);
-		machine.saveToFile(cashbox);
+		machine.resetCashbox();
+		machine.saveToFile();
 	}
 
 	private static void showPopularItems() {
@@ -377,7 +397,7 @@ public class OwnerApp {
 				break;
 			}
 			column = Character.getNumericValue(input.charAt(1));
-			
+
 			System.out.println(machine.searchProduct(row, column));
 		} catch (Exception e) {
 
