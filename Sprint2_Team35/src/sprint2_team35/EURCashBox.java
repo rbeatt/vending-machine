@@ -16,8 +16,7 @@ public class EURCashBox extends CashBox implements ICashBox {
 	 */
 
 	public EURCashBox() {
-		super(new double[] { 0.10, 0.20, 0.50, 1.00, 2.00 },
-				new Currency(1.19, "EUR", "EURcashbox.csv", new String[] { "€", "c" }));
+		super(new double[] { 0.10, 0.20, 0.50, 1.00, 2.00 }, new Currency(1.19, "EUR", "EURcashbox.csv", new String[] { "€", "c" }));
 	}
 
 	@Override

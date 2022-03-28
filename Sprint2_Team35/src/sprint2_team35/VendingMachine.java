@@ -1,12 +1,16 @@
 package sprint2_team35;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.io.IOException;
 import java.util.Scanner;
 
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 
 /**
  * This class models a vending machine, capable of holding 25 different items
@@ -384,6 +388,85 @@ public class VendingMachine {
 
 		myScanner.close();
 
+	}
+	
+	/**
+	 * This method returns dummy data for a GPS coordinate. REPLACE WHEN GPS TASKS ARE COMPLETED
+	 */
+	
+	public String getGPS() {
+		return "0.00000 0.00000";
+	}
+	
+	/**
+	 * This method writes data on each transaction to a text file.
+	 */
+	
+	public void logTransaction(int row, int column, CashBox cashbox) {
+		
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+		LocalDateTime currentTime = LocalDateTime.now();
+		
+		String myDir = "recentTransactions.csv";
+		
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(myDir, true));
+			writer.write(dtf.format(currentTime) + ",£" + df.format(getCost(row, column)) + "," + item[row][column].getProductName() + "," + item[row][column].getProductType() + "," + getGPS() + "\n");
+			writer.close();
+			System.out.println("Transaction data written successfully.");
+		} catch (IOException e) {
+			System.out.println("Error writing transaction data to file.");
+		}
+		
+		copyToMasterFile();
+		
+	}
+	
+	/**
+	 * This method copies the data of the last 10 transactions to the master file, then wipes the recent file..
+	 */
+	
+	public void copyToMasterFile() {
+		
+		try {
+			
+			File myFile = new File("recentTransactions.csv");
+			Scanner myScanner = new Scanner(myFile);
+			myScanner.nextLine();
+			
+			int transactionCount = 0;
+			String[] transactionData = new String[10];
+			
+			while (myScanner.hasNextLine() && transactionCount < 10) {
+				transactionData[transactionCount] = myScanner.nextLine();
+				transactionCount++;
+			}
+			
+			if (transactionCount == 10) {
+				
+				try {
+					BufferedWriter writer = new BufferedWriter(new FileWriter("masterTransactions.csv", true));
+					for (String transaction : transactionData) {
+						writer.write("\n" + transaction);
+					}
+					writer.close();
+					PrintWriter myPw = new PrintWriter("recentTransactions.csv");
+					myPw.flush();
+					myPw.println("DateTime,PricePaid,ProductName,ProductType,GPSLatLong");
+					myPw.close();
+					System.out.println("Transaction data written to master file successfully.");
+				} catch (IOException e) {
+					System.out.println("Error writing transaction data to master file.");
+				}
+				
+			}
+			
+			myScanner.close();
+			
+		} catch (FileNotFoundException e) {
+			System.out.println("Error writing transaction data to file.");
+		}
+		
 	}
 
 	/**

@@ -143,7 +143,7 @@ public class UserApp {
 					double value = Double.parseDouble(coin); // Converts input to a double value
 					if (machine.addCredit(value) != 0) { // Passes as parameter to addCredit() in
 															// VendingMachine
-						System.out.println("Credit: Â£" + df.format(machine.getCredit())); // Displays credit
+						System.out.println("Credit: £" + df.format(machine.getCredit())); // Displays credit
 						finished = false;
 					} else {
 						acceptedCoinsString += "\nMachine only accepts: ";
@@ -246,8 +246,9 @@ public class UserApp {
 						finished = true;
 						System.out.println("Purchase successful! Product being dispensed...");
 						machine.saveToFile();
+						machine.logTransaction(row, column, cashbox);
 						if (machine.getCredit() > 0) {
-							System.out.println("Credit remaining: Â£" + df.format(machine.getCredit()));
+							System.out.println("Credit remaining: £" + df.format(machine.getCredit()));
 							completePurchase(cashbox, moneyPaid, actualCost);
 						} else {
 							addCredit(setCashBox());
@@ -301,15 +302,14 @@ public class UserApp {
 				displayInfo(cashbox); // Calls displayInfo() to make another purchase
 				break;
 			case 2:
-				System.out.println("Amount to be refunded: " + currency.getCurrencySymbols()[0]
-						+ df.format(moneyPaid - actualCost));
+				System.out.println("Amount to be refunded: " + currency.getCurrencySymbols()[0] + df.format(moneyPaid - actualCost));
 				System.out.println(machine.giveChange(moneyPaid, actualCost));
 
 				if (machine.getCredit() == 0) { // Transaction successfully cancelled if credit = 0
 					System.out.println("\nTransaction cancelled. Remaining credit refunded.");
 					addCredit(setCashBox()); // Returns to initial state
 				} else {
-					System.out.println("Credit remaining Â£: " + machine.getCredit());
+					System.out.println("Credit remaining: £" + machine.getCredit());
 					System.out.println("Error cancelling transacton.");
 				}
 				break;
