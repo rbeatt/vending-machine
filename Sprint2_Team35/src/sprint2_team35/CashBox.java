@@ -124,6 +124,10 @@ public class CashBox implements ICashBox {
 
 	public void setCashBoxAmount(double cashBoxAmount) {
 		this.cashBoxAmount = cashBoxAmount;
+		
+		if (this.cashBoxAmount <= 0.00) {
+			this.cashBoxAmount = 0.00;
+		}
 	}
 
 	/**
@@ -250,6 +254,12 @@ public class CashBox implements ICashBox {
 
 	public void setAcceptedCoins(double[] acceptedCoins) {
 		this.acceptedCoins = acceptedCoins;
+		
+		for (int i = 0; i < this.acceptedCoins.length; i++) {
+			if (this.acceptedCoins[i] <= 0.00) {
+				this.acceptedCoins[i] = 0.00;
+			}
+		}
 	}
 
 }

@@ -1,5 +1,7 @@
 package sprint2_team35;
 
+import java.text.DecimalFormat;
+
 /**
  * This class models a change tube. Required for storing and dispensing change.
  * 
@@ -10,6 +12,7 @@ package sprint2_team35;
 public class ChangeTube {
 	private String tubeName;
 	private int quantity;
+	private static final DecimalFormat df = new DecimalFormat("0.00");
 
 	/**
 	 * Default constructor for ChangeTube
@@ -22,12 +25,21 @@ public class ChangeTube {
 	 * Constructor method for ChangeTube
 	 * 
 	 * @param tubeName    - the name of the tub, e.g., Tube 1
-	 * @param totalAmount - the total quantity of coins stored in the tube
+	 * @param quantity - the total quantity of coins stored in the tube
 	 */
 
-	public ChangeTube(String tubeName, int totalAmount) {
-		this.tubeName = tubeName;
-		this.quantity = totalAmount;
+	public ChangeTube(String tubeName, int quantity) {
+		if (tubeName.trim() == "") {
+			this.tubeName = "changeTube";
+		} else {
+			this.tubeName = tubeName;
+		}
+		
+		if (quantity <= 0) {
+			this.quantity = 0;
+		} else {
+			this.quantity = quantity;
+		}
 	}
 
 	/**
@@ -47,7 +59,11 @@ public class ChangeTube {
 	 */
 
 	public void setQuantity(int quantity) {
-		this.quantity = quantity;
+		if (quantity <= 0) {
+			this.quantity = 0;
+		} else {
+			this.quantity = quantity;
+		}
 	}
 
 	/**
@@ -67,7 +83,16 @@ public class ChangeTube {
 	 */
 
 	public void setTubeName(String tubeName) {
-		this.tubeName = tubeName;
+		if (tubeName.trim() == "") {
+			this.tubeName = "changeTube";
+		} else {
+			this.tubeName = tubeName;
+		}
 	}
 
+	public String toString() {
+		String desc = "Total coins in change tube " + this.getTubeName() + ": €";
+		desc += "\n" + df.format(this.getQuantity());
+		return desc;
+	}
 }

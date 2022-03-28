@@ -27,10 +27,31 @@ public class Currency {
 	 */
 
 	public Currency(double rate, String currencyName, String myDir, String[] currencySymbols) {
-		this.rate = rate;
-		this.currencyName = currencyName;
-		this.myDir = myDir;
-		this.currencySymbols = currencySymbols;
+		if (rate <= 0.00) {
+			this.rate = 1.00;
+		} else {
+			this.rate = rate;
+		}
+
+		if (myDir.trim() == "") {
+			this.myDir = "cashbox.csv";
+		} else {
+			this.myDir = myDir;
+		}
+		
+		if (currencyName.trim() == "") {
+			this.currencyName = "GBP";
+		} else {
+			this.currencyName = currencyName;
+		}
+
+		if (currencySymbols == null) {
+			currencySymbols = new String[2];
+			currencySymbols[0] = "£";
+			currencySymbols[1] = "p";
+		} else {
+			this.currencySymbols = currencySymbols;
+		}
 	}
 
 	/**
@@ -57,7 +78,11 @@ public class Currency {
 	 */
 
 	public void setRate(double rate) {
-		this.rate = rate;
+		if (rate <= 0.00) {
+			this.rate = 1.00;
+		} else {
+			this.rate = rate;
+		}
 	}
 
 	/**
@@ -77,7 +102,11 @@ public class Currency {
 	 */
 
 	public void setCurrencyName(String currencyName) {
-		this.currencyName = currencyName;
+		if (currencyName.trim() == "") {
+			this.currencyName = "GBP";
+		} else {
+			this.currencyName = currencyName;
+		}
 	}
 
 	/**
@@ -97,7 +126,11 @@ public class Currency {
 	 */
 
 	public void setMyDir(String myDir) {
-		this.myDir = myDir;
+		if (myDir.trim() == "") {
+			this.myDir = "cashbox.csv";
+		} else {
+			this.myDir = myDir;
+		}
 	}
 
 	/**
@@ -119,7 +152,13 @@ public class Currency {
 	 */
 
 	public void setCurrencySymbols(String[] currencySymbols) {
-		this.currencySymbols = currencySymbols;
+		if (currencySymbols == null) {
+			currencySymbols = new String[2];
+			currencySymbols[0] = "£";
+			currencySymbols[1] = "p";
+		} else {
+			this.currencySymbols = currencySymbols;
+		}
 	}
 
 }
