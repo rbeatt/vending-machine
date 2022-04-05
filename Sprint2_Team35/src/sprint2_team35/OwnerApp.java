@@ -3,6 +3,8 @@ package sprint2_team35;
 import java.text.DecimalFormat;
 import java.util.Scanner;
 
+import sprint2_team35.GpsLocation.Location;
+
 public class OwnerApp {
 
 	private static Scanner myScanner = new Scanner(System.in);
@@ -21,7 +23,7 @@ public class OwnerApp {
 
 		String[] options = { "Restock machine", "Top up tubes", "View total in cashbox and tubes", "Set prices",
 				"Empty cashbox", "Perform a software update", "Change item name", "Show popular items",
-				"Search Product", "Exit Owner Mode" };
+				"Search Product", "Change the machine location", "Exit Owner Mode" };
 		Menu vendingMenu = new Menu("\nOwner Mode", options);
 
 		boolean finished = false;
@@ -56,6 +58,9 @@ public class OwnerApp {
 				searchProduct();
 				break;
 			case 10:
+				changeMachineLocation();
+				break;
+			case 11:
 				finished = true;
 				break;
 			default:
@@ -356,6 +361,42 @@ public class OwnerApp {
 		}
 	}
 
+	
+	/**
+	 * This method allows the owner to change the static location of the vending machine
+	 */
+	
+	private static void changeMachineLocation() {
+		String[] options = {"NothernIreland","England","Scotland","Wales"};
+		Menu locationChange = new Menu("\nWhere is the vending machine now located?", options);
+		int ownerChoice = locationChange.getUserChoice();
+		GpsLocation updateLocation = new GpsLocation();
+		
+		switch(ownerChoice){
+		case 1:
+			updateLocation.currentLocation = Location.NothernIreland;
+			break;
+		case 2:
+			updateLocation.currentLocation = Location.England;
+			break;
+
+		case 3:
+			updateLocation.currentLocation = Location.Scotland;
+			break;
+
+		case 4:
+			updateLocation.currentLocation = Location.Wales;
+			break;
+			
+		default:
+			System.out.println("Not a valid location");;
+			break;
+		}
+		
+		System.out.println("Location updated to " + updateLocation.currentLocation);
+	}
+
+	
 	/**
 	 * This method lets a machine owner reset the cash box.
 	 */
