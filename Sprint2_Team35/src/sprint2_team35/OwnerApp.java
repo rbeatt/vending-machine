@@ -398,7 +398,7 @@ public class OwnerApp {
 			}
 			column = Character.getNumericValue(input.charAt(1));
 
-			System.out.println(machine.searchProduct(row, column));
+			System.out.println(machine.searchProduct(row-1, column-1));
 		} catch (Exception e) {
 
 		}
