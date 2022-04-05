@@ -400,7 +400,7 @@ public class OwnerApp {
 
 			System.out.println(machine.searchProduct(row-1, column-1));
 		} catch (Exception e) {
-
+			System.out.println("Not a valid item");
 		}
 	}
 
