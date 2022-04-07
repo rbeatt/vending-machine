@@ -10,6 +10,7 @@ class VendingMachineTest {
 	static VendingMachine machine; // Creates VendingMachine object
 	double double1;
 	double double2;
+	int [] testTubes = {10, 10, 10, 10, 10};
 
 
 	@BeforeEach
@@ -19,128 +20,149 @@ class VendingMachineTest {
 
 	@Test
 	void testGetItem() {
-		fail("Not yet implemented");
 	}
 
 	@Test
 	void testSetCashBox() {
-		fail("Not yet implemented");
+		System.out.println("\n===== TEST CASE FOR setCashBox() =====");
+		String expected = "EUR";
+		machine.setCashBox(new EURCashBox());
+		CashBox cashbox = machine.getCashBox();
+		Currency currency = cashbox.getCurrency();	
+		String actual = currency.getCurrencyName();
+		assertEquals(expected, actual);
+		
 	}
 
 	@Test
 	void testGetCost() {
-		fail("Not yet implemented");
 	}
 
 	@Test
 	void testGetCashbox() {
-		fail("Not yet implemented");
+		System.out.println("\n===== TEST CASE FOR getCashBox() =====");
+		assertNotNull("\nTest testGetCashBox() failed --- null value returned", machine.getCashBox().toString());
 	}
 
 	@Test
 	void testGetCredit() {
-		fail("Not yet implemented");
+		System.out.println("\n===== TEST CASE FOR getCredit() =====");
+		double expected = 0.00;
+		double actual = machine.getCredit();
+		assertEquals(expected, actual);
 	}
 
 	@Test
 	void testSetItemName() {
-		fail("Not yet implemented");
 	}
 
 	@Test
 	void testSetItemType() {
-		fail("Not yet implemented");
 	}
 
 	@Test
 	void testSetItemCost() {
-		fail("Not yet implemented");
 	}
 
 	@Test
 	void testSetItemQuantity() {
-		fail("Not yet implemented");
 	}
 
 	@Test
 	void testSetItemSaleCount() {
-		fail("Not yet implemented");
 	}
 
 	@Test
 	void testAddTubes() {
-		fail("Not yet implemented");
+		System.out.println("\n===== TEST CASE FOR addTubes() =====");
+		CashBox cashbox = machine.getCashBox();
+		ChangeTube[] changeTubes = cashbox.getChangeTubes();
+
+		for (int i = 0; i < changeTubes.length; i++) {
+			changeTubes[i].setQuantity(0);
+		}
+		
+		machine.addTubes(testTubes);
+
+		int expected = 10;
+		int actual = changeTubes[0].getQuantity();
+		System.out.println(changeTubes[0]);
+		assertEquals(expected, actual);
 	}
+
 
 	@Test
 	void testSetCredit() {
-		fail("Not yet implemented");
+		System.out.println("\n===== TEST CASE FOR setCredit() =====");
+		machine.setCredit(0.00);
+		double expected = 0.00;
+		double actual = machine.getCredit();
+		assertEquals(expected, actual);
 	}
 
 	@Test
 	void testResetCashbox() {
-		fail("Not yet implemented");
+		System.out.println("\n===== TEST CASE FOR resetCashBox() =====");
+		machine.resetCashbox();
+		double expected = 0.00;
+		double actual = machine.getCashBox().getCashBoxAmount();
+		assertEquals(expected, actual);
 	}
 
 	@Test
 	void testSaveToFile() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testLoadFromFile() {
-		fail("Not yet implemented");
+		System.out.println("\n===== TEST CASE FOR saveToFile() =====");
+		machine.getCashBox().setCashBoxAmount(50.00);
+		machine.saveToFile();
+		VendingMachine testMachine = new VendingMachine();
+		CashBox testCashBox = testMachine.getCashBox();
+		double expected = 50.00;
+		double actual = testCashBox.getCashBoxAmount();
+		assertEquals(expected, actual);
 	}
 
 	@Test
 	void testGetGPS() {
-		fail("Not yet implemented");
 	}
 
 	@Test
 	void testLogTransaction() {
-		fail("Not yet implemented");
 	}
 
 	@Test
 	void testCopyToMasterFile() {
-		fail("Not yet implemented");
 	}
 
 	@Test
 	void testRestock() {
-		fail("Not yet implemented");
 	}
 
 	@Test
 	void testGiveChange() {
-		fail("Not yet implemented");
+		System.out.println("\n===== TEST CASE FOR giveChange() =====");
+		assertNotNull("\nTest testGiveChange() failed --- null value returned", machine.giveChange(20.00, 10.00));
 	}
 
 	@Test
 	void testAddCredit() {
-		fail("Not yet implemented");
+		System.out.println("\n===== TEST CASE FOR addCredit() =====");
+		machine.setCredit(0.00);
+		machine.addCredit(2.00);
+		double expected = 2.00;
+		double actual = machine.getCredit();
+		assertEquals(expected, actual);
 	}
 
 	@Test
 	void testPurchaseProduct() {
-		fail("Not yet implemented");
+		System.out.println("\n===== TEST CASE FOR purchaseProduct() =====");
+		machine.setCredit(2.00);
+		double actual = machine.purchaseProduct(2, 2);
+		double expected = 1;
+		assertEquals(expected, actual);
+		
 	}
 
-	@Test
-	void testDetectUSB() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testListUSBContents() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testReadUSBContents() {
-		fail("Not yet implemented");
-	}
 
 	@Test
 	String testHighestSaleCounts() {

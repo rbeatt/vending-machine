@@ -12,7 +12,7 @@ public class Currency {
 	private double rate = 1.00;
 	private String currencyName = "GBP";
 	private String myDir = "cashbox.csv";
-	private String[] currencySymbols = { "Â£", "p" };
+	private String[] currencySymbols = { "£", "p" };
 
 	/**
 	 * Constructor method for Currency. This constructor should be used when

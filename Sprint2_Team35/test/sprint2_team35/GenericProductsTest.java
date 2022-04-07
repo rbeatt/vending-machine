@@ -4,9 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import sprint2_team35.GenericProducts;
-import sprint2_team35.ProductType;
-
 class GenericProductsTest {
 	
 	GenericProducts genericProduct;

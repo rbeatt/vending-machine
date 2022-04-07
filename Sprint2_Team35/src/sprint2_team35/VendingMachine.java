@@ -52,12 +52,11 @@ public class VendingMachine {
 	 * @return - the cash box of selected currency
 	 */
 
-	public CashBox setCashBox(CashBox cashbox) {
+	public void setCashBox(CashBox cashbox) {
 		this.cashBox = cashbox;
 
 		loadFromFile();
 
-		return this.cashBox;
 	}
 
 	/**
@@ -75,11 +74,11 @@ public class VendingMachine {
 	/**
 	 * Getter method for the machine's cash box.
 	 * 
-	 * @return - the cash box data, as a string
+	 * @return - the cash box
 	 */
 
-	public String getCashbox() {
-		return this.cashBox.toString();
+	public CashBox getCashBox() {
+		return this.cashBox;
 	}
 
 	/**

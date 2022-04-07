@@ -31,10 +31,12 @@ public class UserApp {
 			switch (option) {
 			case 1:
 				finished = true;
-				return machine.setCashBox(new CashBox());
+				machine.setCashBox(new CashBox());
+				return machine.getCashBox();
 			case 2:
 				finished = true;
-				return machine.setCashBox(new EURCashBox());
+				machine.setCashBox(new EURCashBox());
+				return machine.getCashBox();
 			default:
 				System.out.println("\nInvalid selection");
 				break;
