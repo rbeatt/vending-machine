@@ -22,11 +22,11 @@ public class EURCashBox extends CashBox implements ICashBox {
 
 	@Override
 	public String toString() {
-		String desc = "Total in collection box: â‚¬";
+		String desc = "Total in collection box: €";
 		desc += df.format(getCashBoxAmount());
 		desc += "\nCoins in tubes: ";
 		for (int i = 0; i < this.getAcceptedCoins().length; i++) {
-			desc += "\nâ‚¬" + df.format(this.getAcceptedCoins()[i]) + ": " + getChangeTubes()[i].getQuantity();
+			desc += "\n€" + df.format(this.getAcceptedCoins()[i]) + ": " + getChangeTubes()[i].getQuantity();
 		}
 		return desc;
 	}

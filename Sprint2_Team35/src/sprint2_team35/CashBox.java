@@ -225,11 +225,11 @@ public class CashBox implements ICashBox {
 	 */
 
 	public String toString() {
-		String desc = "Total in collection box: Â£";
+		String desc = "Total in collection box: £";
 		desc += df.format(getCashBoxAmount());
 		desc += "\nCoins in tubes: ";
 		for (int i = 0; i < this.acceptedCoins.length; i++) {
-			desc += "\nÂ£" + df.format(this.acceptedCoins[i]) + ": " + changeTubes[i].getQuantity();
+			desc += "\n£" + df.format(this.acceptedCoins[i]) + ": " + changeTubes[i].getQuantity();
 		}
 		return desc;
 	}
