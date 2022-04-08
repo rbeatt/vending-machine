@@ -53,23 +53,51 @@ class VendingMachineTest {
 	}
 
 	@Test
-	void testSetItemName() {
+	String testSetItemName() {
+		machine.setItemName(1, 1, "testname");
+		if (machine.getItem(1, 1) == null) {
+			fail();
+		}
+		return machine.getItem(1, 1);
 	}
 
 	@Test
-	void testSetItemType() {
+	String testSetItemType() {
+		machine.setItemType(1, 1, ProductType.HOTDRINK);
+		if (machine.getItem(1, 1) == null) {
+			fail();
+		}
+		return machine.getItem(1, 1);
 	}
 
 	@Test
-	void testSetItemCost() {
+	String testSetItemCost() {
+		double1 = 1.50;
+		machine.setItemCost(1, 1, double1);
+		if (machine.getItem(1, 1) == null) {
+			fail();
+		}
+		return machine.getItem(1, 1);
 	}
 
-	@Test
-	void testSetItemQuantity() {
-	}
 
 	@Test
-	void testSetItemSaleCount() {
+	String testSetItemQuantity() {
+		machine.setItemQuantity(1, 1, 5);
+		if (machine.getItem(1, 1) == null) {
+			fail();
+		}
+		return machine.getItem(1, 1);
+	}
+
+
+	@Test
+	String testSetItemSaleCount() {
+		machine.setItemSaleCount(1, 1, 5);
+		if (machine.getItem(1, 1) == null) {
+			fail();
+		}
+		return machine.getItem(1, 1);
 	}
 
 	@Test
