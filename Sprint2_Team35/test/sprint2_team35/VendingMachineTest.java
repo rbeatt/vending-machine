@@ -19,7 +19,11 @@ class VendingMachineTest {
 	}
 
 	@Test
-	void testGetItem() {
+	String testGetItem() {
+		if (machine.getItem(1, 1) == null) {
+			fail();	
+		}
+		return machine.getItem(1, 1);
 	}
 
 	@Test
@@ -168,7 +172,12 @@ class VendingMachineTest {
 	}
 
 	@Test
-	void testRestock() {
+	String testRestock() {
+		machine.restock(1, 1, 10);
+		if (machine.getItem(0, 0) == null) {
+			fail();
+		}
+		return machine.getItem(1,1);
 	}
 
 	@Test
