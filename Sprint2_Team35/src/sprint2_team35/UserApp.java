@@ -92,7 +92,8 @@ public class UserApp {
 
 		if (inputUsername.matches("name") && inputPassword.matches("12345")) {
 			System.out.println("Login successful!\n");
-			addCredit(setCashBox());
+			PaymentMethod();
+			//addCredit(setCashBox());
 		} else {
 			System.out.println("Sorry, username or password is incorrect. Please try again.\n");
 			verifyIdentity();
@@ -112,13 +113,70 @@ public class UserApp {
 		Random rand = new Random();
 		if (rand.nextInt(2) == 1) {
 			System.out.println("Face recognised! You are now logged in.\n");
-			addCredit(setCashBox());
+			PaymentMethod();
+			//addCredit(setCashBox());
 		} else {
 			System.out.println("Sorry, face not recognised. Please try again.\n");
 			verifyIdentity();
 		}
 
 	}
+	
+	/**
+	 * 
+	 * This method receives input from the user to pass as a parameter for
+	 * setCredit() in the VendingMachine class.
+	 * 
+	 * @param cashbox - the cash box being modified
+	 * 
+	 */
+	
+	private static void PaymentMethod() {
+		String Method;
+		System.out.println("Which payment method would you like to use? Cash, Card or mobile Payment?");
+		Method = input.nextLine();
+		
+		if(Method.equals("cash")) {
+		System.out.println("You have Selected Cash");
+		addCredit(setCashBox());
+		}
+		
+		
+		
+		
+		if(Method.equals("card")) {;
+		System.out.println("You have Selected Card");	
+		System.out.println("Please Insert your card and enter the Pin, For Testing purpose enter '1234'");
+		String Pin = input.nextLine();
+		if (Pin.matches("1234")) {
+			System.out.println("Pin Sucessfull\n");
+			displayInfo(new CashBox());
+			
+		
+		} 
+		
+		 
+		
+		
+		
+		
+		}
+		
+		if(Method.equals("mobile")) {;
+		System.out.println("You have Selected Mobile");
+		System.out.println("Please Scan Your Card");
+		Random rand = new Random();
+		if (rand.nextInt(2) == 1) {
+			System.out.println("Card recognised!.\n");	
+			displayInfo(new CashBox());
+		} else {
+			System.out.println("Sorry, Please try again.\n");
+			PaymentMethod();
+			
+		}
+
+	}
+		}
 
 	/**
 	 * 
