@@ -36,6 +36,12 @@ class VendingMachineTest {
 
 	@Test
 	void testGetCost() {
+		double1 = 2.00;
+		machine.setItemCost(1, 1, double1);
+		double expected = double1;
+		double actual = machine.getCost(1, 1);
+		assertEquals(expected, actual);
+
 	}
 
 	@Test
